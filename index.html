@@ -674,6 +674,107 @@
       color: #c0392b;
     }
 
+    /* Premium Box Glow Effects */
+    .preview-box-container {
+      position: relative;
+      transition: all 0.3s;
+    }
+    .preview-box-container.glow {
+      animation: boxGlow 2s infinite;
+    }
+    @keyframes boxGlow {
+      0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 215, 0, 0.3); }
+      100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+    }
+    .preview-box-container.glow-pink {
+      animation: pinkGlow 2s infinite;
+    }
+    @keyframes pinkGlow {
+      0% { box-shadow: 0 0 10px rgba(255, 77, 148, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(255, 77, 148, 0.8), 0 0 80px rgba(255, 77, 148, 0.3); }
+      100% { box-shadow: 0 0 10px rgba(255, 77, 148, 0.3); }
+    }
+    .preview-box-container.glow-vip {
+      animation: vipGlow 2s infinite;
+    }
+    @keyframes vipGlow {
+      0% { box-shadow: 0 0 10px rgba(155, 89, 182, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(155, 89, 182, 0.8), 0 0 80px rgba(155, 89, 182, 0.3); }
+      100% { box-shadow: 0 0 10px rgba(155, 89, 182, 0.3); }
+    }
+    .preview-box-container.glow-luxury {
+      animation: luxuryGlow 2s infinite;
+    }
+    @keyframes luxuryGlow {
+      0% { box-shadow: 0 0 10px rgba(201, 168, 76, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(201, 168, 76, 0.8), 0 0 80px rgba(201, 168, 76, 0.3); }
+      100% { box-shadow: 0 0 10px rgba(201, 168, 76, 0.3); }
+    }
+    .preview-box-container.glow-ultimate {
+      animation: ultimateGlow 2s infinite;
+    }
+    @keyframes ultimateGlow {
+      0% { box-shadow: 0 0 10px rgba(224, 200, 255, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(224, 200, 255, 0.8), 0 0 80px rgba(224, 200, 255, 0.3); }
+      100% { box-shadow: 0 0 10px rgba(224, 200, 255, 0.3); }
+    }
+
+    /* Theme preview styles */
+    .theme-preview {
+      transition: all 0.3s;
+    }
+    .theme-preview.romantic {
+      background: linear-gradient(145deg, #ffebf0, #ffd6e0);
+      border-color: #ff4d94;
+    }
+    .theme-preview.dark {
+      background: linear-gradient(145deg, #1a1a2e, #16213e);
+      border-color: #0f3460;
+      color: #f5e6f0;
+    }
+    .theme-preview.gold {
+      background: linear-gradient(145deg, #fff8ec, #f5e6c8);
+      border-color: #ffd700;
+    }
+    .theme-preview.rose {
+      background: linear-gradient(145deg, #ffe4ec, #ffc8d6);
+      border-color: #ff6b8a;
+    }
+    .theme-preview.cyber {
+      background: linear-gradient(145deg, #0a0a1a, #1a0a2a);
+      border-color: #00ccff;
+      color: #00ffcc;
+    }
+    .theme-preview.love {
+      background: linear-gradient(145deg, #ffd6d6, #ffb3b3);
+      border-color: #ff3333;
+    }
+    .theme-preview.midnight {
+      background: linear-gradient(145deg, #0a0a1a, #1a0a2a);
+      border-color: #4a4a8a;
+      color: #d0d0f0;
+    }
+    .theme-preview.royal {
+      background: linear-gradient(145deg, #1a0a2a, #2a0a4a);
+      border-color: #9b59b6;
+      color: #e8d0f0;
+    }
+
+    /* Applied box icon in creation */
+    .applied-box-icon {
+      font-size: 3rem;
+      display: block;
+      text-align: center;
+      margin: 4px 0;
+    }
+    .applied-box-name {
+      font-size: 0.7rem;
+      color: #ffd700;
+      text-align: center;
+      font-weight: 600;
+    }
+
     @media (max-width: 500px) { #app { border-radius: 0; min-height: 100vh; } .bottom-nav { padding: 2px 0 10px; } }
   </style>
 </head>
@@ -751,7 +852,7 @@
   <div id="page-create" class="page">
     <h2 style="font-size:1.2rem; color:#ff4d94;">✧ New Vault</h2>
     
-    <!-- Applied Items Display -->
+    <!-- Applied Items Display with Visual Effects -->
     <div style="margin: 10px 0;">
       <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">Applied Items:</div>
       <div id="appliedItemsContainer" class="applied-items">
@@ -759,10 +860,24 @@
       </div>
     </div>
 
+    <!-- Premium Box Preview with Glow -->
+    <div id="boxPreviewContainer" class="preview-box-container" style="margin: 10px 0; padding: 16px; border-radius: 20px; background: #f8f4f6; text-align: center; border: 2px solid #e8e0e4; transition: all 0.3s;">
+      <div id="boxPreviewContent">
+        <div style="font-size: 2.5rem; margin-bottom: 4px;">🔐</div>
+        <div style="font-size: 0.7rem; color: #7a6a72;">No box applied</div>
+      </div>
+    </div>
+
     <div style="background:transparent; padding:0;">
       <div style="margin-bottom:10px;"><input id="secName" placeholder="Vault name" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; color:#1a0e14;"></div>
       <div style="margin-bottom:10px;"><input id="secDesc" placeholder="Description" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; color:#1a0e14;"></div>
-      <div style="margin-bottom:10px;"><textarea id="secContent" placeholder="Secret message..." style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; color:#1a0e14; min-height:80px;"></textarea></div>
+      
+      <!-- Theme Preview Area -->
+      <div id="themePreviewContainer" class="theme-preview" style="margin-bottom:10px; padding:16px; border-radius:16px; border:2px solid #e8e0e4; transition: all 0.3s;">
+        <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:6px;">Message Preview with Theme:</div>
+        <textarea id="secContent" placeholder="Secret message..." style="width:100%; padding:12px 16px; border-radius:16px; background:transparent; border:1px solid #e8e0e4; color:#1a0e14; min-height:80px; transition: all 0.3s;"></textarea>
+      </div>
+      
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <input id="secPass" type="password" placeholder="Password" style="flex:1; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; color:#1a0e14; min-width:100px;">
         <input id="secPass2" type="password" placeholder="Confirm" style="flex:1; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; color:#1a0e14; min-width:100px;">
@@ -909,36 +1024,36 @@ const TOKEN_PACKAGES = [
 ];
 
 const SHOP_ITEMS = [
-  { id: 'pink_diamond', name: 'Pink Diamond', icon: '💗', category: 'box', price: 250, rarity: 'rare', tier: null },
-  { id: 'golden_rose', name: 'Golden Rose', icon: '🌹', category: 'box', price: 300, rarity: 'rare', tier: null },
-  { id: 'crystal_heart', name: 'Crystal Heart', icon: '💎', category: 'box', price: 400, rarity: 'epic', tier: null },
-  { id: 'pink_velvet', name: 'Pink Velvet', icon: '🎀', category: 'box', price: 350, rarity: 'rare', tier: null },
-  { id: 'moonlight', name: 'Moonlight', icon: '🌙', category: 'box', price: 450, rarity: 'epic', tier: 'premium' },
-  { id: 'stardust', name: 'Stardust', icon: '✨', category: 'box', price: 500, rarity: 'epic', tier: 'premium' },
-  { id: 'royal_love', name: 'Royal Love', icon: '👑', category: 'box', price: 600, rarity: 'legendary', tier: 'vip' },
-  { id: 'black_rose', name: 'Black Rose', icon: '🖤', category: 'box', price: 550, rarity: 'epic', tier: 'vip' },
-  { id: 'eternal_heart', name: 'Eternal Heart', icon: '❤️', category: 'box', price: 700, rarity: 'legendary', tier: 'vip' },
-  { id: 'sakura', name: 'Sakura', icon: '🌸', category: 'box', price: 400, rarity: 'rare', tier: null },
-  { id: 'butterfly', name: 'Butterfly', icon: '🦋', category: 'box', price: 450, rarity: 'epic', tier: 'premium' },
-  { id: 'dreamy', name: 'Dreamy', icon: '💫', category: 'box', price: 500, rarity: 'epic', tier: 'premium' },
-  { id: 'galaxy', name: 'Galaxy', icon: '🌌', category: 'box', price: 650, rarity: 'legendary', tier: 'vip' },
-  { id: 'forever', name: 'Forever', icon: '💍', category: 'box', price: 750, rarity: 'legendary', tier: 'luxury' },
-  { id: 'champagne', name: 'Champagne', icon: '🥂', category: 'box', price: 500, rarity: 'epic', tier: 'premium' },
-  { id: 'spring_love', name: 'Spring Love', icon: '🌷', category: 'box', price: 350, rarity: 'rare', tier: null },
-  { id: 'passion', name: 'Passion', icon: '🔥', category: 'box', price: 450, rarity: 'epic', tier: 'premium' },
-  { id: 'cloud_nine', name: 'Cloud Nine', icon: '☁️', category: 'box', price: 400, rarity: 'rare', tier: null },
-  { id: 'ocean_love', name: 'Ocean Love', icon: '🌊', category: 'box', price: 500, rarity: 'epic', tier: 'premium' },
-  { id: 'midnight_rose', name: 'Midnight Rose', icon: '🌹', category: 'box', price: 600, rarity: 'legendary', tier: 'vip' },
-  { id: 'diamond_dust', name: 'Diamond Dust', icon: '💎', category: 'box', price: 800, rarity: 'legendary', tier: 'luxury' },
-  { id: 'pink_moon', name: 'Pink Moon', icon: '🌙', category: 'box', price: 550, rarity: 'epic', tier: 'premium' },
-  { id: 'mirror', name: 'Mirror', icon: '🪞', category: 'box', price: 450, rarity: 'rare', tier: null },
-  { id: 'melody', name: 'Melody', icon: '🎼', category: 'box', price: 500, rarity: 'epic', tier: 'premium' },
-  { id: 'love_letter', name: 'Love Letter', icon: '💌', category: 'box', price: 400, rarity: 'rare', tier: null },
-  { id: 'dark_theme', name: 'Dark Shadow', icon: '🌑', category: 'theme', price: 200, rarity: 'common', tier: null },
-  { id: 'gold_theme', name: 'Gold Royal', icon: '👑', category: 'theme', price: 400, rarity: 'rare', tier: 'premium' },
-  { id: 'rose_theme', name: 'Rose Bloom', icon: '🌹', category: 'theme', price: 350, rarity: 'rare', tier: null },
-  { id: 'cyber_theme', name: 'Cyber Neon', icon: '💠', category: 'theme', price: 450, rarity: 'epic', tier: 'vip' },
-  { id: 'luxury_theme', name: 'Luxury Gold', icon: '✨', category: 'theme', price: 600, rarity: 'epic', tier: 'luxury' }
+  { id: 'pink_diamond', name: 'Pink Diamond', icon: '💗', category: 'box', price: 250, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
+  { id: 'golden_rose', name: 'Golden Rose', icon: '🌹', category: 'box', price: 300, rarity: 'rare', tier: null, glowClass: 'glow' },
+  { id: 'crystal_heart', name: 'Crystal Heart', icon: '💎', category: 'box', price: 400, rarity: 'epic', tier: null, glowClass: 'glow-pink' },
+  { id: 'pink_velvet', name: 'Pink Velvet', icon: '🎀', category: 'box', price: 350, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
+  { id: 'moonlight', name: 'Moonlight', icon: '🌙', category: 'box', price: 450, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
+  { id: 'stardust', name: 'Stardust', icon: '✨', category: 'box', price: 500, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
+  { id: 'royal_love', name: 'Royal Love', icon: '👑', category: 'box', price: 600, rarity: 'legendary', tier: 'vip', glowClass: 'glow-vip' },
+  { id: 'black_rose', name: 'Black Rose', icon: '🖤', category: 'box', price: 550, rarity: 'epic', tier: 'vip', glowClass: 'glow-vip' },
+  { id: 'eternal_heart', name: 'Eternal Heart', icon: '❤️', category: 'box', price: 700, rarity: 'legendary', tier: 'vip', glowClass: 'glow-vip' },
+  { id: 'sakura', name: 'Sakura', icon: '🌸', category: 'box', price: 400, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
+  { id: 'butterfly', name: 'Butterfly', icon: '🦋', category: 'box', price: 450, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
+  { id: 'dreamy', name: 'Dreamy', icon: '💫', category: 'box', price: 500, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
+  { id: 'galaxy', name: 'Galaxy', icon: '🌌', category: 'box', price: 650, rarity: 'legendary', tier: 'vip', glowClass: 'glow-vip' },
+  { id: 'forever', name: 'Forever', icon: '💍', category: 'box', price: 750, rarity: 'legendary', tier: 'luxury', glowClass: 'glow-luxury' },
+  { id: 'champagne', name: 'Champagne', icon: '🥂', category: 'box', price: 500, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
+  { id: 'spring_love', name: 'Spring Love', icon: '🌷', category: 'box', price: 350, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
+  { id: 'passion', name: 'Passion', icon: '🔥', category: 'box', price: 450, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
+  { id: 'cloud_nine', name: 'Cloud Nine', icon: '☁️', category: 'box', price: 400, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
+  { id: 'ocean_love', name: 'Ocean Love', icon: '🌊', category: 'box', price: 500, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
+  { id: 'midnight_rose', name: 'Midnight Rose', icon: '🌹', category: 'box', price: 600, rarity: 'legendary', tier: 'vip', glowClass: 'glow-vip' },
+  { id: 'diamond_dust', name: 'Diamond Dust', icon: '💎', category: 'box', price: 800, rarity: 'legendary', tier: 'luxury', glowClass: 'glow-luxury' },
+  { id: 'pink_moon', name: 'Pink Moon', icon: '🌙', category: 'box', price: 550, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
+  { id: 'mirror', name: 'Mirror', icon: '🪞', category: 'box', price: 450, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
+  { id: 'melody', name: 'Melody', icon: '🎼', category: 'box', price: 500, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
+  { id: 'love_letter', name: 'Love Letter', icon: '💌', category: 'box', price: 400, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
+  { id: 'dark_theme', name: 'Dark Shadow', icon: '🌑', category: 'theme', price: 200, rarity: 'common', tier: null, themeClass: 'dark' },
+  { id: 'gold_theme', name: 'Gold Royal', icon: '👑', category: 'theme', price: 400, rarity: 'rare', tier: 'premium', themeClass: 'gold' },
+  { id: 'rose_theme', name: 'Rose Bloom', icon: '🌹', category: 'theme', price: 350, rarity: 'rare', tier: null, themeClass: 'rose' },
+  { id: 'cyber_theme', name: 'Cyber Neon', icon: '💠', category: 'theme', price: 450, rarity: 'epic', tier: 'vip', themeClass: 'cyber' },
+  { id: 'luxury_theme', name: 'Luxury Gold', icon: '✨', category: 'theme', price: 600, rarity: 'epic', tier: 'luxury', themeClass: 'gold' }
 ];
 
 // ============================================================
@@ -1071,6 +1186,8 @@ function loadUserData(username) {
   
   document.getElementById('userNameDisplay').textContent = user.displayName || username;
   updateAppliedItemsDisplay();
+  updateBoxPreview();
+  updateThemePreview();
 }
 
 function saveUserData() {
@@ -1172,20 +1289,69 @@ function removeAppliedItem(type) {
   APP.appliedItems[type] = null;
   saveUserData();
   updateAppliedItemsDisplay();
+  updateBoxPreview();
+  updateThemePreview();
   toast('🗑️ Removed ' + type);
+}
+
+function updateBoxPreview() {
+  const container = document.getElementById('boxPreviewContainer');
+  const content = document.getElementById('boxPreviewContent');
+  
+  if (APP.appliedItems.box) {
+    const box = SHOP_ITEMS.find(i => i.id === APP.appliedItems.box);
+    if (box) {
+      // Remove all glow classes
+      container.classList.remove('glow', 'glow-pink', 'glow-vip', 'glow-luxury', 'glow-ultimate');
+      if (box.glowClass) {
+        container.classList.add(box.glowClass);
+      }
+      content.innerHTML = `
+        <div class="applied-box-icon">${box.icon}</div>
+        <div class="applied-box-name">✨ ${box.name}</div>
+        <div style="font-size:0.6rem; color:#7a6a72; margin-top:4px;">Premium Box Applied</div>
+      `;
+      return;
+    }
+  }
+  
+  // No box applied
+  container.classList.remove('glow', 'glow-pink', 'glow-vip', 'glow-luxury', 'glow-ultimate');
+  content.innerHTML = `
+    <div style="font-size: 2.5rem; margin-bottom: 4px;">🔐</div>
+    <div style="font-size: 0.7rem; color: #7a6a72;">No box applied</div>
+  `;
+}
+
+function updateThemePreview() {
+  const container = document.getElementById('themePreviewContainer');
+  const textarea = document.getElementById('secContent');
+  
+  // Remove all theme classes
+  container.classList.remove('romantic', 'dark', 'gold', 'rose', 'cyber', 'love', 'midnight', 'royal');
+  
+  if (APP.appliedItems.theme) {
+    const theme = SHOP_ITEMS.find(i => i.id === APP.appliedItems.theme);
+    if (theme && theme.themeClass) {
+      container.classList.add(theme.themeClass);
+      // Also apply to textarea
+      textarea.style.background = 'transparent';
+    }
+  } else {
+    // Reset to default
+    textarea.style.background = '#f5f0f2';
+  }
 }
 
 function applyItemToCreation(itemId) {
   const item = SHOP_ITEMS.find(i => i.id === itemId);
   if (!item) return;
   
-  // Check if user owns the item
   if (!APP.owned.has(itemId)) {
     toast('❌ You don\'t own this item. Purchase it first!');
     return;
   }
   
-  // Apply based on category
   if (item.category === 'box') {
     APP.appliedItems.box = itemId;
   } else if (item.category === 'theme') {
@@ -1196,6 +1362,8 @@ function applyItemToCreation(itemId) {
   
   saveUserData();
   updateAppliedItemsDisplay();
+  updateBoxPreview();
+  updateThemePreview();
   toast('✅ Applied ' + item.name + ' to your vault!');
 }
 
@@ -1227,7 +1395,6 @@ function createSecretNow(data) {
   const category = document.getElementById('secCategory').value;
   const recipient = document.getElementById('secRecipient').value || 'Someone';
   
-  // Get applied items info
   let appliedBox = null;
   let appliedTheme = null;
   let appliedEffect = null;
@@ -1292,7 +1459,6 @@ function renderVault(filter = '') {
     const badge = s.tier === 'premium' ? '💕 PREMIUM' : (s.tier === 'vip' ? '👑 VIP' : (s.tier === 'luxury' ? '✨ LUXURY' : (s.tier === 'ultimate' ? '🌟 ULTIMATE' : '🔒')));
     const badgeCls = s.tier === 'premium' ? 'badge-gold' : (s.tier === 'vip' ? 'badge-vip' : (s.tier === 'luxury' ? 'badge-luxury' : (s.tier === 'ultimate' ? 'badge-ultimate' : '')));
     
-    // Show applied items if any
     let appliedInfo = '';
     if (s.appliedBox) appliedInfo += ' 📦' + s.appliedBox;
     if (s.appliedTheme) appliedInfo += ' 🎨' + s.appliedTheme;
@@ -1556,7 +1722,6 @@ function buyShopItem(itemId) {
   const item = SHOP_ITEMS.find(i => i.id === itemId);
   if (!item) return;
   
-  // If already owned, apply it instead of buying
   if (APP.owned.has(itemId)) {
     applyItemToCreation(itemId);
     return;
@@ -1574,7 +1739,6 @@ function buyShopItem(itemId) {
   renderShop(APP.shopFilter);
   toast('✅ ' + item.name + ' purchased!');
   
-  // Auto-apply if it's a box, theme, or effect
   if (item.category === 'box' || item.category === 'theme' || item.category === 'effect') {
     applyItemToCreation(itemId);
   }
@@ -1597,6 +1761,8 @@ function updateUI() {
   renderDiscovery();
   renderVault();
   updateAppliedItemsDisplay();
+  updateBoxPreview();
+  updateThemePreview();
 }
 
 function toggleTokenPanel() {
@@ -1636,7 +1802,11 @@ function navigateTo(page) {
   if (page === 'premium') { renderPlans(); renderTokenPackages(); }
   if (page === 'settings') loadSettings();
   if (page === 'landing') renderDiscovery();
-  if (page === 'create') updateAppliedItemsDisplay();
+  if (page === 'create') {
+    updateAppliedItemsDisplay();
+    updateBoxPreview();
+    updateThemePreview();
+  }
   
   document.getElementById('modalOverlay').classList.remove('show');
 }
