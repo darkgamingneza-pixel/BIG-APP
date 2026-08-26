@@ -132,7 +132,12 @@
     .bottom-nav button.active { color: #ff4d94; }
     .bottom-nav button:active { transform: scale(0.92); }
 
-    .page { display: none; padding: 12px 16px 30px; animation: fadeSlide 0.3s ease; }
+    /* Page routing - only one page visible at a time */
+    .page { 
+      display: none; 
+      padding: 12px 16px 30px; 
+      animation: fadeSlide 0.3s ease;
+    }
     .page.active { display: block; }
     @keyframes fadeSlide { 0% { opacity: 0.3; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
 
@@ -405,6 +410,74 @@
       color: white;
     }
 
+    /* Auth Pages */
+    #authPage {
+      display: none;
+      padding: 40px 20px;
+      min-height: 80vh;
+      background: #ffffff;
+    }
+    body.dark #authPage {
+      background: #160d14;
+    }
+    #authPage .auth-container {
+      max-width: 360px;
+      margin: 20px auto;
+      text-align: center;
+    }
+    #authPage h2 {
+      color: #ff4d94;
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    #authPage .subtitle {
+      color: #7a6a72;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+    #authPage input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f5f0f2;
+      border: 1px solid #e8e0e4;
+      color: #1a0e14;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+    body.dark #authPage input {
+      background: #261a22;
+      border-color: #3a2a32;
+      color: #f5e6f0;
+    }
+    #authPage input:focus {
+      border-color: #ff4d94;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 20, 100, 0.08);
+    }
+    #authPage .btn {
+      width: 100%;
+      margin-top: 8px;
+    }
+    #authPage .auth-switch {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #7a6a72;
+    }
+    #authPage .auth-switch a {
+      color: #ff4d94;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #authPage .auth-switch a:hover {
+      text-decoration: underline;
+    }
+    #authError {
+      color: #e74c3c;
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+
     /* Admin Login Page Styles */
     #adminLoginPage {
       display: none;
@@ -560,21 +633,61 @@
       padding: 6px;
     }
 
+    .logout-btn {
+      background: none;
+      border: none;
+      color: #7a6a72;
+      font-size: 0.7rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+    .logout-btn:hover {
+      background: rgba(255, 77, 148, 0.08);
+      color: #ff4d94;
+    }
+
     @media (max-width: 500px) { #app { border-radius: 0; min-height: 100vh; } .bottom-nav { padding: 2px 0 10px; } }
   </style>
 </head>
 <body>
 <div id="app">
-  <!-- HEADER WITH TOKEN -->
-  <div class="app-header">
-    <span class="logo">SECRETORA</span>
-    <div class="token-pill" onclick="toggleTokenPanel()">
-      <i class="fas fa-coins"></i>
-      <span class="token-amount" id="headerTokenBalance">0</span>
+  <!-- AUTH PAGE -->
+  <div id="authPage">
+    <div class="auth-container">
+      <div style="font-size:3rem; margin-bottom:8px;">🔐</div>
+      <h2>SECRETORA</h2>
+      <div class="subtitle">Private things deserve a private place.</div>
+      
+      <div id="authForm">
+        <input id="authUsername" placeholder="Username">
+        <input id="authPassword" placeholder="Password" type="password">
+        <input id="authDisplayName" placeholder="Display Name" style="display:none;">
+        <button class="btn btn-primary btn-block" id="authSubmitBtn" onclick="handleAuth()">Create Account</button>
+        <div id="authError"></div>
+        <div class="auth-switch">
+          <span id="authSwitchText">Already have an account?</span>
+          <a id="authSwitchLink" onclick="toggleAuthMode()">Login</a>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- PUBLIC PAGES -->
+  <!-- HEADER -->
+  <div class="app-header" id="appHeader" style="display:none;">
+    <span class="logo">SECRETORA</span>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:0.7rem; color:#7a6a72;" id="userNameDisplay"></span>
+      <div class="token-pill" onclick="toggleTokenPanel()">
+        <i class="fas fa-coins"></i>
+        <span class="token-amount" id="headerTokenBalance">0</span>
+      </div>
+      <button class="logout-btn" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </div>
+
+  <!-- PAGE: LANDING -->
   <div id="page-landing" class="page active">
     <div class="text-center" style="padding:10px 16px 0;">
       <div style="font-size:3rem; margin:6px 0;" id="vaultGlow">🔐</div>
@@ -585,7 +698,6 @@
       </div>
     </div>
 
-    <!-- EXPLORE VAULTS SECTION -->
     <div style="margin-top:12px;">
       <div class="flex-between">
         <h3 style="font-size:1.1rem; font-weight:600;">🌟 Explore Vaults</h3>
@@ -595,6 +707,7 @@
     </div>
   </div>
 
+  <!-- PAGE: VAULT -->
   <div id="page-vault" class="page">
     <div class="flex-between mb-2"><span style="font-weight:600;">🔐 My Vaults</span> <span id="vaultCount" style="color:#7a6a72;">0</span></div>
     <div style="display:flex; gap:8px; margin-bottom:12px;">
@@ -608,6 +721,7 @@
     </div>
   </div>
 
+  <!-- PAGE: CREATE -->
   <div id="page-create" class="page">
     <h2 style="font-size:1.2rem; color:#ff4d94;">✧ New Vault</h2>
     <div style="background:transparent; padding:0;">
@@ -653,7 +767,7 @@
     </div>
   </div>
 
-  <!-- SHOP -->
+  <!-- PAGE: SHOP -->
   <div id="page-shop" class="page">
     <div class="flex-between mb-2">
       <span style="font-weight:600; font-size:1.1rem;">🛍️ Secret Shop</span>
@@ -670,6 +784,7 @@
     <div id="shopGrid" class="shop-grid"></div>
   </div>
 
+  <!-- PAGE: PREMIUM -->
   <div id="page-premium" class="page">
     <h2 style="font-size:1.2rem;">👑 Membership</h2>
     <div id="plansContainer"></div>
@@ -679,21 +794,22 @@
     </div>
   </div>
 
+  <!-- PAGE: FAVORITES -->
   <div id="page-favorites" class="page"><h2 style="font-size:1.2rem;">⭐ Favorites</h2><div id="favList"></div></div>
 
+  <!-- PAGE: SETTINGS -->
   <div id="page-settings" class="page">
     <h2 style="font-size:1.2rem;">⚙️ Settings</h2>
     <div style="background:#f8f4f6; border-radius:20px; padding:16px; border:1px solid #e8e0e4;">
       <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #e8e0e4;"><span style="color:#7a6a72;">Name</span><input id="profileName" placeholder="Name" style="background:#ffffff; border:1px solid #e8e0e4; border-radius:12px; padding:6px 12px; max-width:160px;"></div>
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #e8e0e4;"><span style="color:#7a6a72;">Email</span><input id="profileEmail" placeholder="Email" style="background:#ffffff; border:1px solid #e8e0e4; border-radius:12px; padding:6px 12px; max-width:160px;"></div>
-      <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0;"><span style="color:#7a6a72;">Theme</span><select id="themeSelect" style="background:#ffffff; border:1px solid #e8e0e4; border-radius:12px; padding:6px 12px;"><option value="light">Light</option><option value="dark">Dark</option></select></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #e8e0e4;"><span style="color:#7a6a72;">Theme</span><select id="themeSelect" style="background:#ffffff; border:1px solid #e8e0e4; border-radius:12px; padding:6px 12px;"><option value="light">Light</option><option value="dark">Dark</option></select></div>
     </div>
     <button class="btn btn-outline btn-block mt-2" onclick="saveSettings()">Save Settings</button>
     <button class="btn btn-sm" style="background:#f0e8ec; color:#ff4d94; margin-top:10px; width:100%;" onclick="if(confirm('Reset all data?')){localStorage.clear();init();toast('Reset');}">Reset Vault</button>
   </div>
 
   <!-- BOTTOM NAV -->
-  <div class="bottom-nav" id="mainNav">
+  <div class="bottom-nav" id="mainNav" style="display:none;">
     <button class="active" data-page="landing"><i class="fas fa-home"></i><span>Home</span></button>
     <button data-page="vault"><i class="fas fa-vault"></i><span>Vaults</span></button>
     <button data-page="create"><i class="fas fa-plus-circle"></i><span>Create</span></button>
@@ -702,7 +818,7 @@
     <button data-page="settings"><i class="fas fa-sliders-h"></i><span>Settings</span></button>
   </div>
 
-  <!-- ADMIN LOGIN PAGE (Separate from app) -->
+  <!-- ADMIN LOGIN PAGE -->
   <div id="adminLoginPage">
     <div class="login-container">
       <h2>🔐 Admin Login</h2>
@@ -793,37 +909,134 @@ const SHOP_ITEMS = [
 // ============================================================
 // STATE
 // ============================================================
-const APP = {
+let APP = {
   secrets: [],
   favorites: new Set(),
-  settings: { theme: 'light', profileName: 'Secret Keeper', profileEmail: 'vault@secretora.com' },
+  settings: { theme: 'light', profileName: '' },
   membership: 'free',
-  tokens: 100,
+  tokens: 0,
   owned: new Set(),
   transactions: [],
   payments: [],
   dailyReward: { lastClaim: null, streak: 0 },
   shopFilter: 'all',
   adminLoggedIn: false,
-  pendingPurchases: []
+  pendingPurchases: [],
+  currentUser: null
 };
 
 // ============================================================
-// LOCAL STORAGE
+// AUTH FUNCTIONS
 // ============================================================
-function loadState() {
-  try {
-    const s = JSON.parse(localStorage.getItem('secretora_data_v6'));
-    if (s) {
-      Object.assign(APP, s);
-      APP.favorites = new Set(s.favorites || []);
-      APP.owned = new Set(s.owned || []);
-    }
-  } catch(e){}
-  if (!APP.secrets.length) seedDemoSecrets();
+let isLoginMode = false;
+
+function toggleAuthMode() {
+  isLoginMode = !isLoginMode;
+  const btn = document.getElementById('authSubmitBtn');
+  const switchText = document.getElementById('authSwitchText');
+  const link = document.getElementById('authSwitchLink');
+  const nameInput = document.getElementById('authDisplayName');
+  
+  if (isLoginMode) {
+    btn.textContent = 'Login';
+    switchText.textContent = "Don't have an account?";
+    link.textContent = 'Create Account';
+    nameInput.style.display = 'none';
+  } else {
+    btn.textContent = 'Create Account';
+    switchText.textContent = 'Already have an account?';
+    link.textContent = 'Login';
+    nameInput.style.display = 'block';
+  }
+  document.getElementById('authError').textContent = '';
 }
-function saveState() {
-  localStorage.setItem('secretora_data_v6', JSON.stringify({
+
+function handleAuth() {
+  const username = document.getElementById('authUsername').value.trim();
+  const password = document.getElementById('authPassword').value.trim();
+  const displayName = document.getElementById('authDisplayName').value.trim();
+  const error = document.getElementById('authError');
+  
+  if (!username || !password) {
+    error.textContent = 'Please fill in all fields.';
+    return;
+  }
+  
+  if (!isLoginMode && !displayName) {
+    error.textContent = 'Please enter a display name.';
+    return;
+  }
+  
+  let users = JSON.parse(localStorage.getItem('secretora_users') || '{}');
+  
+  if (isLoginMode) {
+    if (users[username] && users[username].password === password) {
+      APP.currentUser = username;
+      localStorage.setItem('secretora_current_user', username);
+      error.textContent = '';
+      loadUserData(username);
+      showApp();
+      toast('✅ Welcome back, ' + users[username].displayName + '!');
+    } else {
+      error.textContent = 'Invalid username or password.';
+    }
+  } else {
+    if (users[username]) {
+      error.textContent = 'Username already taken. Please choose another.';
+      return;
+    }
+    
+    users[username] = {
+      password: password,
+      displayName: displayName,
+      username: username,
+      createdAt: new Date().toISOString()
+    };
+    localStorage.setItem('secretora_users', JSON.stringify(users));
+    
+    const userData = {
+      secrets: [],
+      favorites: [],
+      settings: { theme: 'light', profileName: displayName },
+      membership: 'free',
+      tokens: 0,
+      owned: [],
+      transactions: [],
+      payments: [],
+      dailyReward: { lastClaim: null, streak: 0 }
+    };
+    localStorage.setItem('secretora_user_data_' + username, JSON.stringify(userData));
+    
+    APP.currentUser = username;
+    localStorage.setItem('secretora_current_user', username);
+    error.textContent = '';
+    loadUserData(username);
+    showApp();
+    toast('🎉 Account created! Welcome ' + displayName + '!');
+  }
+}
+
+function loadUserData(username) {
+  const data = JSON.parse(localStorage.getItem('secretora_user_data_' + username) || '{}');
+  const users = JSON.parse(localStorage.getItem('secretora_users') || '{}');
+  const user = users[username] || {};
+  
+  APP.secrets = data.secrets || [];
+  APP.favorites = new Set(data.favorites || []);
+  APP.settings = data.settings || { theme: 'light', profileName: user.displayName || username };
+  APP.membership = data.membership || 'free';
+  APP.tokens = data.tokens || 0;
+  APP.owned = new Set(data.owned || []);
+  APP.transactions = data.transactions || [];
+  APP.payments = data.payments || [];
+  APP.dailyReward = data.dailyReward || { lastClaim: null, streak: 0 };
+  
+  document.getElementById('userNameDisplay').textContent = user.displayName || username;
+}
+
+function saveUserData() {
+  if (!APP.currentUser) return;
+  const data = {
     secrets: APP.secrets,
     favorites: [...APP.favorites],
     settings: APP.settings,
@@ -832,34 +1045,54 @@ function saveState() {
     owned: [...APP.owned],
     transactions: APP.transactions,
     payments: APP.payments,
-    dailyReward: APP.dailyReward,
-    pendingPurchases: APP.pendingPurchases
-  }));
+    dailyReward: APP.dailyReward
+  };
+  localStorage.setItem('secretora_user_data_' + APP.currentUser, JSON.stringify(data));
 }
 
-// ============================================================
-// DEMO SECRETS
-// ============================================================
-function seedDemoSecrets() {
-  const demos = [
-    { name: 'For You ❤️', desc: 'A little secret.', content: 'You mean the world to me. 💕', pass: '1234', tier: 'standard', cat: '❤️ Love', creator: 'Sarah' },
-    { name: 'Family Vault', desc: 'For my loved ones.', content: 'We are family forever.', pass: '1234', tier: 'standard', cat: '👨‍👩‍👧 Family', creator: 'James' },
-    { name: 'Bestie 💕', desc: 'For my best friend.', content: 'You are my sunshine.', pass: '1234', tier: 'standard', cat: '👥 Friends', creator: 'Emily' },
-    { name: 'Travel Memories', desc: 'Adventures around the world.', content: 'Paris, Tokyo, New York...', pass: '1234', tier: 'standard', cat: '✈️ Travel', creator: 'Michael' },
-    { name: 'Secret Project', desc: 'Top secret work stuff.', content: 'Launch date: December 2026', pass: '1234', tier: 'premium', cat: '💼 Work', creator: 'David' },
-    { name: 'Love Letters', desc: 'Letters to my love.', content: 'Forever and always ❤️', pass: '1234', tier: 'standard', cat: '❤️ Love', creator: 'Emma' }
-  ];
-  demos.forEach(d => {
-    APP.secrets.push({
-      id: 'demo_' + Date.now() + Math.random(),
-      name: d.name, description: d.desc, content: d.content, password: d.pass,
-      type: 'text', tier: d.tier, theme: 'Luxury Pink', category: d.cat,
-      recipient: 'You', createdAt: new Date().toISOString(), unlocks: 0,
-      isPublic: true, isDemo: false,
-      creator: d.creator || 'User'
-    });
-  });
-  saveState();
+function showApp() {
+  document.getElementById('authPage').style.display = 'none';
+  document.getElementById('appHeader').style.display = 'flex';
+  document.getElementById('mainNav').style.display = 'flex';
+  updateUI();
+  renderDiscovery();
+  navigateTo('landing');
+}
+
+function logoutUser() {
+  if (confirm('Logout?')) {
+    APP.currentUser = null;
+    localStorage.removeItem('secretora_current_user');
+    document.getElementById('authPage').style.display = 'block';
+    document.getElementById('appHeader').style.display = 'none';
+    document.getElementById('mainNav').style.display = 'none';
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('authPage').querySelector('.auth-container').style.display = 'block';
+    document.getElementById('authUsername').value = '';
+    document.getElementById('authPassword').value = '';
+    document.getElementById('authDisplayName').value = '';
+    document.getElementById('authError').textContent = '';
+    isLoginMode = false;
+    document.getElementById('authSubmitBtn').textContent = 'Create Account';
+    document.getElementById('authSwitchText').textContent = 'Already have an account?';
+    document.getElementById('authSwitchLink').textContent = 'Login';
+    document.getElementById('authDisplayName').style.display = 'block';
+    toast('👋 Logged out');
+  }
+}
+
+function checkAuth() {
+  const currentUser = localStorage.getItem('secretora_current_user');
+  if (currentUser) {
+    const users = JSON.parse(localStorage.getItem('secretora_users') || '{}');
+    if (users[currentUser]) {
+      APP.currentUser = currentUser;
+      loadUserData(currentUser);
+      showApp();
+      return true;
+    }
+  }
+  return false;
 }
 
 // ============================================================
@@ -890,7 +1123,7 @@ function createSecretNow(data) {
   const category = document.getElementById('secCategory').value;
   const recipient = document.getElementById('secRecipient').value || 'Someone';
   const secret = {
-    id: 'sec_' + Date.now(),
+    id: 'sec_' + Date.now() + '_' + APP.currentUser,
     name: data.name,
     description: data.desc,
     content: data.content,
@@ -904,7 +1137,8 @@ function createSecretNow(data) {
     unlocks: 0,
     isPublic: data.isPublic !== undefined ? data.isPublic : true,
     isDemo: false,
-    creator: APP.settings.profileName || 'User'
+    creator: APP.settings.profileName || APP.currentUser,
+    userId: APP.currentUser
   };
   APP.secrets.push(secret);
   saveState();
@@ -985,6 +1219,104 @@ function submitTierPayment(tier, ref, name, desc, content, pass, isPublic) {
   saveState();
   document.getElementById('modalOverlay').classList.remove('show');
   toast('📩 Payment submitted for verification');
+}
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+function renderVault(filter = '') {
+  const container = document.getElementById('vaultList');
+  const empty = document.getElementById('emptyVault');
+  let list = APP.secrets.filter(s => !s.isDemo);
+  if (filter) list = list.filter(s => s.name.toLowerCase().includes(filter.toLowerCase()));
+  if (!list.length) { container.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  let html = '';
+  list.forEach(s => {
+    const isFav = APP.favorites.has(s.id);
+    const tierClass = s.tier === 'premium' ? 'premium' : (s.tier === 'vip' ? 'vip' : (s.tier === 'luxury' ? 'luxury' : (s.tier === 'ultimate' ? 'ultimate' : '')));
+    const badge = s.tier === 'premium' ? '💕 PREMIUM' : (s.tier === 'vip' ? '👑 VIP' : (s.tier === 'luxury' ? '✨ LUXURY' : (s.tier === 'ultimate' ? '🌟 ULTIMATE' : '🔒')));
+    const badgeCls = s.tier === 'premium' ? 'badge-gold' : (s.tier === 'vip' ? 'badge-vip' : (s.tier === 'luxury' ? 'badge-luxury' : (s.tier === 'ultimate' ? 'badge-ultimate' : '')));
+    html += `<div class="vault-card ${tierClass}">
+      <div class="flex-between"><span style="font-weight:600;">${s.name}</span><span class="badge ${badgeCls}">${badge}</span></div>
+      <div style="color:#7a6a72; font-size:0.85rem;">${s.description || ''}</div>
+      <div style="display:flex; gap:6px; font-size:0.7rem; color:#9a8a92;">${s.category||'📁'} ${s.recipient ? '👤 '+s.recipient : ''}</div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+        <button class="btn btn-sm btn-outline" onclick="openUnlockModal('${s.id}')"><i class="fas fa-unlock-alt"></i> Open</button>
+        <button class="btn btn-sm btn-outline" onclick="shareSecret('${s.id}')"><i class="fas fa-share-alt"></i> Share</button>
+        <button class="btn btn-sm btn-outline" onclick="toggleFavorite('${s.id}')" style="${isFav?'color:#ffd700;':''}"><i class="fas fa-star"></i></button>
+        <button class="btn btn-sm btn-outline" onclick="deleteSecret('${s.id}')"><i class="fas fa-trash-alt"></i></button>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+  document.getElementById('vaultCount').innerText = list.length + ' vaults';
+}
+
+function renderDiscovery() {
+  const container = document.getElementById('discoveryGrid');
+  const countEl = document.getElementById('vaultCountDiscovery');
+  
+  const publicVaults = APP.secrets.filter(sec => sec.isPublic && !sec.isDemo);
+  
+  if (!publicVaults.length) {
+    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#9a8a92; padding:30px 0;">
+      <i class="fas fa-users" style="font-size:2rem; display:block; margin-bottom:8px;"></i>
+      <p>No public vaults yet.<br>Be the first to share!</p>
+      <button class="btn btn-primary btn-sm mt-2" onclick="navigateTo('create')">Create Vault</button>
+    </div>`;
+    countEl.textContent = '0 vaults';
+    return;
+  }
+  
+  countEl.textContent = publicVaults.length + ' vaults';
+  
+  let html = '';
+  publicVaults.forEach(vault => {
+    const isLocked = true;
+    const tier = vault.tier || 'standard';
+    const tierDisplay = tier === 'standard' ? 'Standard' : tier.toUpperCase();
+    const tierColor = tier === 'premium' ? '#ffd700' : (tier === 'vip' ? '#9b59b6' : (tier === 'luxury' ? '#c9a84c' : (tier === 'ultimate' ? '#e0c8ff' : '#888')));
+    
+    const hasAccess = APP.membership === tier || APP.membership === 'ultimate' || 
+                      (tier === 'premium' && ['premium','vip','luxury','ultimate'].includes(APP.membership)) ||
+                      (tier === 'vip' && ['vip','luxury','ultimate'].includes(APP.membership)) ||
+                      (tier === 'luxury' && ['luxury','ultimate'].includes(APP.membership));
+    
+    const isOwned = APP.secrets.some(s => s.id === vault.id);
+    
+    let buttonHtml = '';
+    if (isOwned) {
+      buttonHtml = `<button class="btn btn-sm btn-primary" onclick="openUnlockModal('${vault.id}')">🔓 Open Vault</button>`;
+    } else if (hasAccess) {
+      buttonHtml = `<button class="btn btn-sm btn-primary" onclick="openUnlockModal('${vault.id}')">🔓 Unlock Vault</button>`;
+    } else {
+      buttonHtml = `<button class="btn btn-sm" style="background:#f0e8ec;" onclick="showUpgradePrompt('${tier}')">🔒 ${tierDisplay} Required</button>`;
+    }
+    
+    html += `
+      <div class="vault-discovery-card">
+        <div class="vault-icon">${vault.category ? vault.category.charAt(0) : '🔐'}</div>
+        <div class="vault-name">${vault.name}</div>
+        <div class="vault-desc">${vault.description || 'No description'}</div>
+        ${vault.creator ? `<div style="font-size:0.6rem; color:#9a8a92; text-align:center;">by ${vault.creator}</div>` : ''}
+        <div class="vault-meta">
+          <span class="vault-status ${isLocked ? 'locked' : 'unlocked'}">
+            ${isLocked ? '🔒 Locked' : '🔓 Unlocked'}
+          </span>
+          <span style="color:${tierColor}; font-weight:600;">${tierDisplay}</span>
+        </div>
+        ${buttonHtml}
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+function filterSecrets() {
+  const q = document.getElementById('searchInput').value.trim();
+  renderVault(q);
 }
 
 // ============================================================
@@ -1078,126 +1410,6 @@ function handleUnlock(id) {
 }
 
 // ============================================================
-// RENDER VAULT
-// ============================================================
-function renderVault(filter = '') {
-  const container = document.getElementById('vaultList');
-  const empty = document.getElementById('emptyVault');
-  let list = APP.secrets.filter(s => !s.isDemo);
-  if (filter) list = list.filter(s => s.name.toLowerCase().includes(filter.toLowerCase()));
-  if (!list.length) { container.innerHTML = ''; empty.classList.remove('hidden'); return; }
-  empty.classList.add('hidden');
-  let html = '';
-  list.forEach(s => {
-    const isFav = APP.favorites.has(s.id);
-    const tierClass = s.tier === 'premium' ? 'premium' : (s.tier === 'vip' ? 'vip' : (s.tier === 'luxury' ? 'luxury' : (s.tier === 'ultimate' ? 'ultimate' : '')));
-    const badge = s.tier === 'premium' ? '💕 PREMIUM' : (s.tier === 'vip' ? '👑 VIP' : (s.tier === 'luxury' ? '✨ LUXURY' : (s.tier === 'ultimate' ? '🌟 ULTIMATE' : '🔒')));
-    const badgeCls = s.tier === 'premium' ? 'badge-gold' : (s.tier === 'vip' ? 'badge-vip' : (s.tier === 'luxury' ? 'badge-luxury' : (s.tier === 'ultimate' ? 'badge-ultimate' : '')));
-    html += `<div class="vault-card ${tierClass}">
-      <div class="flex-between"><span style="font-weight:600;">${s.name}</span><span class="badge ${badgeCls}">${badge}</span></div>
-      <div style="color:#7a6a72; font-size:0.85rem;">${s.description || ''}</div>
-      <div style="display:flex; gap:6px; font-size:0.7rem; color:#9a8a92;">${s.category||'📁'} ${s.recipient ? '👤 '+s.recipient : ''}</div>
-      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
-        <button class="btn btn-sm btn-outline" onclick="openUnlockModal('${s.id}')"><i class="fas fa-unlock-alt"></i> Open</button>
-        <button class="btn btn-sm btn-outline" onclick="shareSecret('${s.id}')"><i class="fas fa-share-alt"></i> Share</button>
-        <button class="btn btn-sm btn-outline" onclick="toggleFavorite('${s.id}')" style="${isFav?'color:#ffd700;':''}"><i class="fas fa-star"></i></button>
-        <button class="btn btn-sm btn-outline" onclick="deleteSecret('${s.id}')"><i class="fas fa-trash-alt"></i></button>
-      </div>
-    </div>`;
-  });
-  container.innerHTML = html;
-  document.getElementById('vaultCount').innerText = list.length + ' vaults';
-}
-
-function filterSecrets() {
-  const q = document.getElementById('searchInput').value.trim();
-  renderVault(q);
-}
-
-// ============================================================
-// RENDER DISCOVERY
-// ============================================================
-function renderDiscovery() {
-  const container = document.getElementById('discoveryGrid');
-  const countEl = document.getElementById('vaultCountDiscovery');
-  
-  const publicVaults = APP.secrets.filter(sec => sec.isPublic && !sec.isDemo);
-  
-  if (!publicVaults.length) {
-    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#9a8a92; padding:30px 0;">
-      <i class="fas fa-users" style="font-size:2rem; display:block; margin-bottom:8px;"></i>
-      <p>No public vaults yet.<br>Be the first to share!</p>
-      <button class="btn btn-primary btn-sm mt-2" onclick="navigateTo('create')">Create Vault</button>
-    </div>`;
-    countEl.textContent = '0 vaults';
-    return;
-  }
-  
-  countEl.textContent = publicVaults.length + ' vaults';
-  
-  let html = '';
-  publicVaults.forEach(vault => {
-    const isLocked = true;
-    const tier = vault.tier || 'standard';
-    const tierDisplay = tier === 'standard' ? 'Standard' : tier.toUpperCase();
-    const tierColor = tier === 'premium' ? '#ffd700' : (tier === 'vip' ? '#9b59b6' : (tier === 'luxury' ? '#c9a84c' : (tier === 'ultimate' ? '#e0c8ff' : '#888')));
-    
-    const hasAccess = APP.membership === tier || APP.membership === 'ultimate' || 
-                      (tier === 'premium' && ['premium','vip','luxury','ultimate'].includes(APP.membership)) ||
-                      (tier === 'vip' && ['vip','luxury','ultimate'].includes(APP.membership)) ||
-                      (tier === 'luxury' && ['luxury','ultimate'].includes(APP.membership));
-    
-    const isOwned = APP.secrets.some(s => s.id === vault.id);
-    
-    let buttonHtml = '';
-    if (isOwned) {
-      buttonHtml = `<button class="btn btn-sm btn-primary" onclick="openUnlockModal('${vault.id}')">🔓 Open Vault</button>`;
-    } else if (hasAccess) {
-      buttonHtml = `<button class="btn btn-sm btn-primary" onclick="openUnlockModal('${vault.id}')">🔓 Unlock Vault</button>`;
-    } else {
-      buttonHtml = `<button class="btn btn-sm" style="background:#f0e8ec;" onclick="showUpgradePrompt('${tier}')">🔒 ${tierDisplay} Required</button>`;
-    }
-    
-    html += `
-      <div class="vault-discovery-card">
-        <div class="vault-icon">${vault.category ? vault.category.charAt(0) : '🔐'}</div>
-        <div class="vault-name">${vault.name}</div>
-        <div class="vault-desc">${vault.description || 'No description'}</div>
-        ${vault.creator ? `<div style="font-size:0.6rem; color:#9a8a92; text-align:center;">by ${vault.creator}</div>` : ''}
-        <div class="vault-meta">
-          <span class="vault-status ${isLocked ? 'locked' : 'unlocked'}">
-            ${isLocked ? '🔒 Locked' : '🔓 Unlocked'}
-          </span>
-          <span style="color:${tierColor}; font-weight:600;">${tierDisplay}</span>
-        </div>
-        ${buttonHtml}
-      </div>
-    `;
-  });
-  
-  container.innerHTML = html;
-}
-
-function showUpgradePrompt(tier) {
-  const plan = PLANS[tier];
-  if (!plan) return;
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  content.innerHTML = `
-    <div style="text-align:center;">
-      <h3 style="color:#ff4d94;">🔒 ${plan.name} Required</h3>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <p style="color:#7a6a72;">This vault requires ${plan.name} membership.</p>
-        <div style="font-size:1.2rem; font-weight:600; color:#ff4d94;">$${plan.price.toFixed(2)}/month</div>
-      </div>
-      <button class="btn btn-primary btn-block" onclick="document.getElementById('modalOverlay').classList.remove('show');navigateTo('premium')">View Plans</button>
-      <button class="btn btn-sm btn-outline mt-2" onclick="document.getElementById('modalOverlay').classList.remove('show')">Close</button>
-    </div>
-  `;
-  overlay.classList.add('show');
-}
-
-// ============================================================
 // FAVORITES
 // ============================================================
 function renderFavorites() {
@@ -1230,7 +1442,298 @@ function copySecret(text) {
 }
 
 // ============================================================
-// RENDER PLANS
+// SHOP
+// ============================================================
+function renderShop(filter = 'all') {
+  const container = document.getElementById('shopGrid');
+  let items = SHOP_ITEMS;
+  if (filter !== 'all') items = items.filter(i => i.category === filter);
+  if (!items.length) {
+    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#9a8a92; padding:30px 0;">
+      <i class="fas fa-box-open" style="font-size:2rem; display:block; margin-bottom:8px;"></i>
+      <p>No items in this category</p>
+    </div>`;
+    return;
+  }
+  
+  let html = '';
+  items.forEach(item => {
+    const owned = APP.owned.has(item.id);
+    const locked = item.tier && APP.membership !== item.tier && !APP.owned.has(item.id);
+    const canAfford = APP.tokens >= item.price;
+    const rarityClass = 'rarity-' + (item.rarity || 'common');
+    const tierLabel = item.tier ? `<span class="tier-required">${item.tier.toUpperCase()}</span>` : '';
+    
+    html += `<div class="shop-item">
+      ${owned ? '<span class="owned-badge">✓ OWNED</span>' : ''}
+      <div class="item-icon">${item.icon}</div>
+      <div class="item-name">${item.name}</div>
+      <div class="item-price">🪙 ${item.price}</div>
+      <span class="rarity ${rarityClass}">${item.rarity?.toUpperCase() || 'COMMON'}</span>
+      ${tierLabel}
+      <button class="btn btn-sm ${owned ? 'btn-outline' : 'btn-primary'}" onclick="buyShopItem('${item.id}')" ${locked ? 'disabled style="opacity:0.5;"' : ''}>
+        ${owned ? '✓ Owned' : (locked ? '🔒 Locked' : (canAfford ? 'Buy Now' : '🪙 Insufficient'))}
+      </button>
+    </div>`;
+  });
+  container.innerHTML = html;
+  
+  document.querySelectorAll('.shop-filters .btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.shopFilter === filter);
+  });
+}
+
+function buyShopItem(itemId) {
+  const item = SHOP_ITEMS.find(i => i.id === itemId);
+  if (!item) return;
+  if (APP.owned.has(itemId)) { toast('Already owned'); return; }
+  if (item.tier && APP.membership !== item.tier) { toast('🔒 ' + item.tier.toUpperCase() + ' membership required'); return; }
+  if (APP.tokens < item.price) { toast('Need ' + (item.price - APP.tokens) + ' more tokens'); return; }
+  if (!confirm(`Purchase ${item.name} for ${item.price} tokens?`)) return;
+  APP.tokens -= item.price;
+  APP.owned.add(itemId);
+  APP.transactions.push({ type: 'shop', item: item.name, amount: -item.price, date: new Date().toISOString() });
+  saveState();
+  updateUI();
+  renderShop(APP.shopFilter);
+  toast('✅ ' + item.name + ' purchased!');
+}
+
+function filterShop(category) {
+  APP.shopFilter = category;
+  renderShop(category);
+}
+
+// ============================================================
+// UI UPDATE
+// ============================================================
+function updateUI() {
+  document.getElementById('headerTokenBalance').innerText = APP.tokens;
+  document.getElementById('shopTokenDisplay').innerText = APP.tokens;
+  renderPlans();
+  renderTokenPackages();
+  renderShop(APP.shopFilter);
+  renderDiscovery();
+  renderVault();
+}
+
+function toggleTokenPanel() {
+  const overlay = document.getElementById('modalOverlay');
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <div style="text-align:center;">
+      <h3 style="color:#ff4d94;">🪙 Wallet</h3>
+      <div style="font-size:2rem; font-weight:700; margin:12px 0;">${APP.tokens}</div>
+      <div style="color:#7a6a72; font-size:0.8rem;">Available to spend</div>
+      <div style="display:flex; gap:10px; margin-top:16px;">
+        <button class="btn btn-primary btn-block" onclick="document.getElementById('modalOverlay').classList.remove('show');navigateTo('premium')">Buy Tokens</button>
+        <button class="btn btn-outline btn-block" onclick="document.getElementById('modalOverlay').classList.remove('show')">Close</button>
+      </div>
+    </div>
+  `;
+  overlay.classList.add('show');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function navigateTo(page) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  
+  // Show the target page
+  const target = document.getElementById('page-' + page);
+  if (target) target.classList.add('active');
+  
+  // Update nav buttons
+  document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav button').forEach(b => {
+    if (b.dataset.page === page) b.classList.add('active');
+  });
+  
+  // Render content for specific pages
+  if (page === 'vault') renderVault();
+  if (page === 'favorites') renderFavorites();
+  if (page === 'shop') renderShop(APP.shopFilter);
+  if (page === 'premium') { renderPlans(); renderTokenPackages(); }
+  if (page === 'settings') loadSettings();
+  if (page === 'landing') renderDiscovery();
+  
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+document.querySelectorAll('.bottom-nav button').forEach(btn => {
+  btn.addEventListener('click', () => navigateTo(btn.dataset.page));
+});
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function loadSettings() {
+  document.getElementById('profileName').value = APP.settings.profileName || '';
+  document.getElementById('themeSelect').value = APP.settings.theme || 'light';
+}
+function saveSettings() {
+  APP.settings.profileName = document.getElementById('profileName').value;
+  APP.settings.theme = document.getElementById('themeSelect').value;
+  saveState();
+  toast('✓ Settings saved');
+  applyTheme();
+}
+
+function applyTheme() {
+  const theme = APP.settings.theme || 'light';
+  if (theme === 'dark') {
+    document.body.classList.add('dark');
+  } else {
+    document.body.classList.remove('dark');
+  }
+}
+
+// ============================================================
+// ADMIN FUNCTIONS
+// ============================================================
+function adminLogin() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass = document.getElementById('adminPassword').value.trim();
+  const error = document.getElementById('adminLoginError');
+  
+  if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
+    APP.adminLoggedIn = true;
+    saveState();
+    showAdminPanel();
+    error.innerText = '';
+  } else {
+    error.innerText = 'Invalid administrator credentials.';
+  }
+}
+
+function adminLogout() {
+  APP.adminLoggedIn = false;
+  saveState();
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('adminLoginPage').style.display = 'block';
+  document.getElementById('mainNav').style.display = 'flex';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-landing').classList.add('active');
+  if (window.location.hash === '#/admin') {
+    window.location.hash = '';
+  }
+}
+
+function showAdminPanel() {
+  document.getElementById('adminLoginPage').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  document.getElementById('mainNav').style.display = 'none';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  renderAdminDashboard();
+}
+
+function renderAdminDashboard() {
+  const container = document.getElementById('adminContent');
+  const users = JSON.parse(localStorage.getItem('secretora_users') || '{}');
+  const userCount = Object.keys(users).length;
+  const totalSecrets = APP.secrets.length;
+  const totalPayments = APP.payments.length;
+  const pendingPayments = APP.payments.filter(p => p.status === 'pending').length;
+  const totalRevenue = APP.payments.filter(p => p.status === 'approved').reduce((sum, p) => sum + (p.amount || 0), 0);
+
+  let paymentsHtml = APP.payments.length ? APP.payments.map(p => `
+    <div class="payment-row">
+      <div class="payment-header">
+        <span class="payment-product">${p.product === 'subscription' ? PLANS[p.tier]?.name || p.tier : p.product}</span>
+        <span class="payment-status status-${p.status}">${p.status.toUpperCase()}</span>
+      </div>
+      <div class="payment-details">
+        $${p.amount?.toFixed(2) || '0.00'} · ${p.sender || 'N/A'} · Ref: ${p.reference || 'N/A'}
+      </div>
+      ${p.status === 'pending' ? `
+        <div class="payment-actions">
+          <button class="btn btn-sm btn-primary" onclick="approvePayment('${p.id}')">Approve</button>
+          <button class="btn btn-sm btn-outline" onclick="rejectPayment('${p.id}')">Reject</button>
+        </div>
+      ` : ''}
+    </div>
+  `).join('') : '<div style="color:#7a6a72; padding:20px 0; text-align:center;">No payments yet</div>';
+
+  container.innerHTML = `
+    <div class="admin-stats">
+      <div class="admin-stat"><div class="stat-value">${userCount}</div><div class="stat-label">Total Users</div></div>
+      <div class="admin-stat"><div class="stat-value">${totalSecrets}</div><div class="stat-label">Total Secrets</div></div>
+      <div class="admin-stat"><div class="stat-value">${totalPayments}</div><div class="stat-label">Total Payments</div></div>
+      <div class="admin-stat"><div class="stat-value">${pendingPayments}</div><div class="stat-label">Pending</div></div>
+      <div class="admin-stat"><div class="stat-value">$${totalRevenue.toFixed(2)}</div><div class="stat-label">Revenue</div></div>
+    </div>
+    <h3 style="margin-bottom:10px; font-size:1rem;">📋 Payment Requests</h3>
+    ${paymentsHtml}
+    <div style="margin-top:16px; padding:12px; background:#f8f4f6; border-radius:12px; font-size:0.7rem; color:#7a6a72; text-align:center;">
+      <strong>Admin:</strong> wilsoncoozy@gmail.com
+    </div>
+  `;
+}
+
+function approvePayment(paymentId) {
+  const payment = APP.payments.find(p => p.id === paymentId);
+  if (!payment) return;
+  if (!confirm(`Approve payment ${payment.reference}?`)) return;
+
+  payment.status = 'approved';
+  payment.verifiedAt = new Date().toISOString();
+
+  if (payment.product === 'subscription' && payment.tier) {
+    APP.membership = payment.tier;
+    const plan = PLANS[payment.tier];
+    if (plan) APP.tokens += plan.tokens;
+    toast('✅ ' + plan.name + ' activated');
+  } else if (payment.product === 'tokens' && payment.tokens) {
+    APP.tokens += payment.tokens;
+    toast('✅ ' + payment.tokens + ' tokens added');
+  }
+
+  if (payment.secretData) {
+    const data = payment.secretData;
+    const theme = document.getElementById('secTheme')?.value || 'Luxury Pink';
+    const category = document.getElementById('secCategory')?.value || '❤️ Love';
+    const recipient = document.getElementById('secRecipient')?.value || 'Someone';
+    APP.secrets.push({
+      id: 'sec_' + Date.now() + '_' + APP.currentUser,
+      name: data.name,
+      description: data.desc,
+      content: data.content,
+      password: data.pass,
+      type: 'text',
+      tier: data.tier,
+      theme,
+      category,
+      recipient,
+      createdAt: new Date().toISOString(),
+      unlocks: 0,
+      isPublic: data.isPublic !== undefined ? data.isPublic : true,
+      isDemo: false,
+      creator: APP.settings.profileName || APP.currentUser,
+      userId: APP.currentUser
+    });
+    toast('✅ Premium secret created!');
+  }
+
+  saveState();
+  updateUI();
+  renderAdminDashboard();
+  toast('✓ Payment approved');
+}
+
+function rejectPayment(paymentId) {
+  const payment = APP.payments.find(p => p.id === paymentId);
+  if (!payment) return;
+  if (!confirm(`Reject payment ${payment.reference}?`)) return;
+  payment.status = 'rejected';
+  saveState();
+  renderAdminDashboard();
+  toast('✗ Payment rejected');
+}
+
+// ============================================================
+// RENDER PLANS & TOKEN PACKAGES
 // ============================================================
 function renderPlans() {
   const container = document.getElementById('plansContainer');
@@ -1385,293 +1888,36 @@ function submitTokenPayment(pkgId, ref) {
 }
 
 // ============================================================
-// SHOP
+// SHOW UPGRADE PROMPT
 // ============================================================
-function renderShop(filter = 'all') {
-  const container = document.getElementById('shopGrid');
-  let items = SHOP_ITEMS;
-  if (filter !== 'all') items = items.filter(i => i.category === filter);
-  if (!items.length) {
-    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#9a8a92; padding:30px 0;">
-      <i class="fas fa-box-open" style="font-size:2rem; display:block; margin-bottom:8px;"></i>
-      <p>No items in this category</p>
-    </div>`;
-    return;
-  }
-  
-  let html = '';
-  items.forEach(item => {
-    const owned = APP.owned.has(item.id);
-    const locked = item.tier && APP.membership !== item.tier && !APP.owned.has(item.id);
-    const canAfford = APP.tokens >= item.price;
-    const rarityClass = 'rarity-' + (item.rarity || 'common');
-    const tierLabel = item.tier ? `<span class="tier-required">${item.tier.toUpperCase()}</span>` : '';
-    
-    html += `<div class="shop-item">
-      ${owned ? '<span class="owned-badge">✓ OWNED</span>' : ''}
-      <div class="item-icon">${item.icon}</div>
-      <div class="item-name">${item.name}</div>
-      <div class="item-price">🪙 ${item.price}</div>
-      <span class="rarity ${rarityClass}">${item.rarity?.toUpperCase() || 'COMMON'}</span>
-      ${tierLabel}
-      <button class="btn btn-sm ${owned ? 'btn-outline' : 'btn-primary'}" onclick="buyShopItem('${item.id}')" ${locked ? 'disabled style="opacity:0.5;"' : ''}>
-        ${owned ? '✓ Owned' : (locked ? '🔒 Locked' : (canAfford ? 'Buy Now' : '🪙 Insufficient'))}
-      </button>
-    </div>`;
-  });
-  container.innerHTML = html;
-  
-  document.querySelectorAll('.shop-filters .btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.shopFilter === filter);
-  });
-}
-
-function buyShopItem(itemId) {
-  const item = SHOP_ITEMS.find(i => i.id === itemId);
-  if (!item) return;
-  if (APP.owned.has(itemId)) { toast('Already owned'); return; }
-  if (item.tier && APP.membership !== item.tier) { toast('🔒 ' + item.tier.toUpperCase() + ' membership required'); return; }
-  if (APP.tokens < item.price) { toast('Need ' + (item.price - APP.tokens) + ' more tokens'); return; }
-  if (!confirm(`Purchase ${item.name} for ${item.price} tokens?`)) return;
-  APP.tokens -= item.price;
-  APP.owned.add(itemId);
-  APP.transactions.push({ type: 'shop', item: item.name, amount: -item.price, date: new Date().toISOString() });
-  saveState();
-  updateUI();
-  renderShop(APP.shopFilter);
-  toast('✅ ' + item.name + ' purchased!');
-}
-
-function filterShop(category) {
-  APP.shopFilter = category;
-  renderShop(category);
-}
-
-// ============================================================
-// UI UPDATE
-// ============================================================
-function updateUI() {
-  document.getElementById('headerTokenBalance').innerText = APP.tokens;
-  document.getElementById('shopTokenDisplay').innerText = APP.tokens;
-  renderPlans();
-  renderTokenPackages();
-  renderShop(APP.shopFilter);
-  renderDiscovery();
-}
-
-function toggleTokenPanel() {
+function showUpgradePrompt(tier) {
+  const plan = PLANS[tier];
+  if (!plan) return;
   const overlay = document.getElementById('modalOverlay');
   const content = document.getElementById('modalContent');
   content.innerHTML = `
     <div style="text-align:center;">
-      <h3 style="color:#ff4d94;">🪙 Wallet</h3>
-      <div style="font-size:2rem; font-weight:700; margin:12px 0;">${APP.tokens}</div>
-      <div style="color:#7a6a72; font-size:0.8rem;">Available to spend</div>
-      <div style="display:flex; gap:10px; margin-top:16px;">
-        <button class="btn btn-primary btn-block" onclick="document.getElementById('modalOverlay').classList.remove('show');navigateTo('premium')">Buy Tokens</button>
-        <button class="btn btn-outline btn-block" onclick="document.getElementById('modalOverlay').classList.remove('show')">Close</button>
+      <h3 style="color:#ff4d94;">🔒 ${plan.name} Required</h3>
+      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
+        <p style="color:#7a6a72;">This vault requires ${plan.name} membership.</p>
+        <div style="font-size:1.2rem; font-weight:600; color:#ff4d94;">$${plan.price.toFixed(2)}/month</div>
       </div>
+      <button class="btn btn-primary btn-block" onclick="document.getElementById('modalOverlay').classList.remove('show');navigateTo('premium')">View Plans</button>
+      <button class="btn btn-sm btn-outline mt-2" onclick="document.getElementById('modalOverlay').classList.remove('show')">Close</button>
     </div>
   `;
   overlay.classList.add('show');
 }
 
 // ============================================================
-// NAVIGATION
+// SAVE STATE
 // ============================================================
-function navigateTo(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById('page-' + page);
-  if (target) target.classList.add('active');
-  document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.bottom-nav button').forEach(b => {
-    if (b.dataset.page === page) b.classList.add('active');
-  });
-  if (page === 'vault') renderVault();
-  if (page === 'favorites') renderFavorites();
-  if (page === 'shop') renderShop(APP.shopFilter);
-  if (page === 'premium') { renderPlans(); renderTokenPackages(); }
-  if (page === 'settings') loadSettings();
-  if (page === 'landing') renderDiscovery();
-  document.getElementById('modalOverlay').classList.remove('show');
-}
-
-document.querySelectorAll('.bottom-nav button').forEach(btn => {
-  btn.addEventListener('click', () => navigateTo(btn.dataset.page));
-});
-
-// ============================================================
-// SETTINGS
-// ============================================================
-function loadSettings() {
-  document.getElementById('profileName').value = APP.settings.profileName || '';
-  document.getElementById('profileEmail').value = APP.settings.profileEmail || '';
-  document.getElementById('themeSelect').value = APP.settings.theme || 'light';
-}
-function saveSettings() {
-  APP.settings.profileName = document.getElementById('profileName').value;
-  APP.settings.profileEmail = document.getElementById('profileEmail').value;
-  APP.settings.theme = document.getElementById('themeSelect').value;
-  saveState();
-  toast('✓ Settings saved');
-  applyTheme();
-}
-
-function applyTheme() {
-  const theme = APP.settings.theme || 'light';
-  if (theme === 'dark') {
-    document.body.classList.add('dark');
-  } else {
-    document.body.classList.remove('dark');
-  }
+function saveState() {
+  saveUserData();
 }
 
 // ============================================================
-// ADMIN FUNCTIONS
-// ============================================================
-function adminLogin() {
-  const email = document.getElementById('adminEmail').value.trim();
-  const pass = document.getElementById('adminPassword').value.trim();
-  const error = document.getElementById('adminLoginError');
-  
-  if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
-    APP.adminLoggedIn = true;
-    saveState();
-    showAdminPanel();
-    error.innerText = '';
-  } else {
-    error.innerText = 'Invalid administrator credentials.';
-  }
-}
-
-function adminLogout() {
-  APP.adminLoggedIn = false;
-  saveState();
-  document.getElementById('adminPanel').style.display = 'none';
-  document.getElementById('adminLoginPage').style.display = 'block';
-  document.getElementById('mainNav').style.display = 'flex';
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-landing').classList.add('active');
-  // Update URL to remove #/admin
-  if (window.location.hash === '#/admin') {
-    window.location.hash = '';
-  }
-}
-
-function showAdminPanel() {
-  document.getElementById('adminLoginPage').style.display = 'none';
-  document.getElementById('adminPanel').style.display = 'block';
-  document.getElementById('mainNav').style.display = 'none';
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  renderAdminDashboard();
-}
-
-function renderAdminDashboard() {
-  const container = document.getElementById('adminContent');
-  const totalSecrets = APP.secrets.length;
-  const totalPayments = APP.payments.length;
-  const pendingPayments = APP.payments.filter(p => p.status === 'pending').length;
-  const approvedPayments = APP.payments.filter(p => p.status === 'approved').length;
-  const rejectedPayments = APP.payments.filter(p => p.status === 'rejected').length;
-  const totalRevenue = APP.payments.filter(p => p.status === 'approved').reduce((sum, p) => sum + (p.amount || 0), 0);
-  const premiumUsers = APP.membership !== 'free' ? 1 : 0;
-
-  let paymentsHtml = APP.payments.length ? APP.payments.map(p => `
-    <div class="payment-row">
-      <div class="payment-header">
-        <span class="payment-product">${p.product === 'subscription' ? PLANS[p.tier]?.name || p.tier : p.product}</span>
-        <span class="payment-status status-${p.status}">${p.status.toUpperCase()}</span>
-      </div>
-      <div class="payment-details">
-        $${p.amount?.toFixed(2) || '0.00'} · ${p.sender || 'N/A'} · Ref: ${p.reference || 'N/A'}
-      </div>
-      ${p.status === 'pending' ? `
-        <div class="payment-actions">
-          <button class="btn btn-sm btn-primary" onclick="approvePayment('${p.id}')">Approve</button>
-          <button class="btn btn-sm btn-outline" onclick="rejectPayment('${p.id}')">Reject</button>
-        </div>
-      ` : ''}
-    </div>
-  `).join('') : '<div style="color:#7a6a72; padding:20px 0; text-align:center;">No payments yet</div>';
-
-  container.innerHTML = `
-    <div class="admin-stats">
-      <div class="admin-stat"><div class="stat-value">${totalSecrets}</div><div class="stat-label">Total Secrets</div></div>
-      <div class="admin-stat"><div class="stat-value">${premiumUsers}</div><div class="stat-label">Premium Users</div></div>
-      <div class="admin-stat"><div class="stat-value">${totalPayments}</div><div class="stat-label">Total Payments</div></div>
-      <div class="admin-stat"><div class="stat-value">${pendingPayments}</div><div class="stat-label">Pending</div></div>
-      <div class="admin-stat"><div class="stat-value">${approvedPayments}</div><div class="stat-label">Approved</div></div>
-      <div class="admin-stat"><div class="stat-value">$${totalRevenue.toFixed(2)}</div><div class="stat-label">Revenue</div></div>
-    </div>
-    <h3 style="margin-bottom:10px; font-size:1rem;">📋 Payment Requests</h3>
-    ${paymentsHtml}
-    <div style="margin-top:16px; padding:12px; background:#f8f4f6; border-radius:12px; font-size:0.7rem; color:#7a6a72; text-align:center;">
-      <strong>Admin:</strong> wilsoncoozy@gmail.com
-    </div>
-  `;
-}
-
-function approvePayment(paymentId) {
-  const payment = APP.payments.find(p => p.id === paymentId);
-  if (!payment) return;
-  if (!confirm(`Approve payment ${payment.reference}?`)) return;
-
-  payment.status = 'approved';
-  payment.verifiedAt = new Date().toISOString();
-
-  if (payment.product === 'subscription' && payment.tier) {
-    APP.membership = payment.tier;
-    const plan = PLANS[payment.tier];
-    if (plan) APP.tokens += plan.tokens;
-    toast('✅ ' + plan.name + ' activated');
-  } else if (payment.product === 'tokens' && payment.tokens) {
-    APP.tokens += payment.tokens;
-    toast('✅ ' + payment.tokens + ' tokens added');
-  }
-
-  if (payment.secretData) {
-    const data = payment.secretData;
-    const theme = document.getElementById('secTheme')?.value || 'Luxury Pink';
-    const category = document.getElementById('secCategory')?.value || '❤️ Love';
-    const recipient = document.getElementById('secRecipient')?.value || 'Someone';
-    APP.secrets.push({
-      id: 'sec_' + Date.now(),
-      name: data.name,
-      description: data.desc,
-      content: data.content,
-      password: data.pass,
-      type: 'text',
-      tier: data.tier,
-      theme,
-      category,
-      recipient,
-      createdAt: new Date().toISOString(),
-      unlocks: 0,
-      isPublic: data.isPublic !== undefined ? data.isPublic : true,
-      isDemo: false,
-      creator: APP.settings.profileName || 'User'
-    });
-    toast('✅ Premium secret created!');
-  }
-
-  saveState();
-  updateUI();
-  renderAdminDashboard();
-  toast('✓ Payment approved');
-}
-
-function rejectPayment(paymentId) {
-  const payment = APP.payments.find(p => p.id === paymentId);
-  if (!payment) return;
-  if (!confirm(`Reject payment ${payment.reference}?`)) return;
-  payment.status = 'rejected';
-  saveState();
-  renderAdminDashboard();
-  toast('✗ Payment rejected');
-}
-
-// ============================================================
-// UTILITIES
+// TOAST
 // ============================================================
 function toast(msg) {
   const container = document.getElementById('toastContainer');
@@ -1687,7 +1933,7 @@ function copyText(text) {
 }
 
 // ============================================================
-// CHECK FOR ADMIN ROUTE ON LOAD
+// CHECK FOR ADMIN ROUTE
 // ============================================================
 function checkAdminRoute() {
   if (window.location.hash === '#/admin') {
@@ -1706,15 +1952,19 @@ function checkAdminRoute() {
 // INIT
 // ============================================================
 function init() {
-  loadState();
-  applyTheme();
-  updateUI();
-  renderVault();
-  renderFavorites();
-  renderPlans();
-  renderTokenPackages();
-  renderShop('all');
-  renderDiscovery();
+  if (!checkAuth()) {
+    document.getElementById('authPage').style.display = 'block';
+    document.getElementById('appHeader').style.display = 'none';
+    document.getElementById('mainNav').style.display = 'none';
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('authPage').querySelector('.auth-container').style.display = 'block';
+  }
+
+  checkAdminRoute();
+
+  window.addEventListener('hashchange', function() {
+    checkAdminRoute();
+  });
 
   const icon = document.getElementById('vaultGlow');
   if (icon) setInterval(() => icon.classList.toggle('glow'), 1800);
@@ -1725,27 +1975,12 @@ function init() {
     const sec = APP.secrets.find(s => s.id === secretId);
     if (sec) setTimeout(() => openUnlockModal(sec.id), 600);
   }
-
-  // Check for admin route
-  checkAdminRoute();
-
-  // If no admin route, show landing
-  if (!window.location.hash || window.location.hash !== '#/admin') {
-    navigateTo('landing');
-    toast('💕 Secretora · Private Vault');
-  }
 }
-
-// Listen for hash changes
-window.addEventListener('hashchange', function() {
-  checkAdminRoute();
-});
 
 document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === this) this.classList.remove('show');
 });
 
-// Add glow style
 const style = document.createElement('style');
 style.textContent = `.glow { filter: drop-shadow(0 0 40px rgba(255,20,100,0.3)); }`;
 document.head.appendChild(style);
