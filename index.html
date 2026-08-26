@@ -232,7 +232,6 @@
     .hidden { display: none; }
     .text-center { text-align: center; }
 
-    /* Vault Discovery Grid */
     .vault-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -299,19 +298,6 @@
       padding: 8px;
     }
 
-    /* Enhanced Shop Styles */
-    .shop-section {
-      margin-bottom: 20px;
-    }
-    .shop-section-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #ff4d94;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
     .shop-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -419,6 +405,161 @@
       color: white;
     }
 
+    /* Admin Login Page Styles */
+    #adminLoginPage {
+      display: none;
+      padding: 40px 20px;
+      min-height: 100vh;
+      background: #ffffff;
+    }
+    body.dark #adminLoginPage {
+      background: #160d14;
+    }
+    #adminLoginPage .login-container {
+      max-width: 360px;
+      margin: 40px auto;
+      text-align: center;
+    }
+    #adminLoginPage h2 {
+      color: #ff4d94;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    #adminLoginPage input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f5f0f2;
+      border: 1px solid #e8e0e4;
+      color: #1a0e14;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+    body.dark #adminLoginPage input {
+      background: #261a22;
+      border-color: #3a2a32;
+      color: #f5e6f0;
+    }
+    #adminLoginPage input:focus {
+      border-color: #ff4d94;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 20, 100, 0.08);
+    }
+    #adminLoginPage .btn {
+      width: 100%;
+      margin-top: 8px;
+    }
+    #adminLoginError {
+      color: #e74c3c;
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+
+    /* Admin Panel Styles */
+    #adminPanel {
+      display: none;
+      padding: 16px;
+      background: #f8f4f6;
+      min-height: 100vh;
+    }
+    body.dark #adminPanel {
+      background: #0d060a;
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e8e0e4;
+    }
+    body.dark .admin-header {
+      border-bottom-color: #2a1a2a;
+    }
+    .admin-header .admin-title {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #ff4d94;
+    }
+    .admin-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .admin-stat {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+      border: 1px solid #e8e0e4;
+    }
+    body.dark .admin-stat {
+      background: #1a1020;
+      border-color: #2a1a2a;
+    }
+    .admin-stat .stat-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ff4d94;
+    }
+    .admin-stat .stat-label {
+      font-size: 0.7rem;
+      color: #7a6a72;
+      margin-top: 4px;
+    }
+    body.dark .admin-stat .stat-label {
+      color: #9a8a92;
+    }
+    .payment-row {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      border: 1px solid #e8e0e4;
+    }
+    body.dark .payment-row {
+      background: #1a1020;
+      border-color: #2a1a2a;
+    }
+    .payment-row .payment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .payment-row .payment-product {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .payment-row .payment-status {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 12px;
+    }
+    .status-pending { background: #f39c12; color: white; }
+    .status-approved { background: #27ae60; color: white; }
+    .status-rejected { background: #e74c3c; color: white; }
+    .payment-row .payment-details {
+      font-size: 0.75rem;
+      color: #7a6a72;
+      margin: 4px 0;
+    }
+    body.dark .payment-row .payment-details {
+      color: #9a8a92;
+    }
+    .payment-row .payment-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .payment-row .payment-actions .btn {
+      flex: 1;
+      font-size: 0.7rem;
+      padding: 6px;
+    }
+
     @media (max-width: 500px) { #app { border-radius: 0; min-height: 100vh; } .bottom-nav { padding: 2px 0 10px; } }
   </style>
 </head>
@@ -444,7 +585,7 @@
       </div>
     </div>
 
-    <!-- EXPLORE VAULTS SECTION - Only real user vaults -->
+    <!-- EXPLORE VAULTS SECTION -->
     <div style="margin-top:12px;">
       <div class="flex-between">
         <h3 style="font-size:1.1rem; font-weight:600;">🌟 Explore Vaults</h3>
@@ -512,7 +653,7 @@
     </div>
   </div>
 
-  <!-- SHOP - Enhanced Design -->
+  <!-- SHOP -->
   <div id="page-shop" class="page">
     <div class="flex-between mb-2">
       <span style="font-weight:600; font-size:1.1rem;">🛍️ Secret Shop</span>
@@ -559,6 +700,32 @@
     <button data-page="shop"><i class="fas fa-store"></i><span>Shop</span></button>
     <button data-page="premium"><i class="fas fa-crown"></i><span>Premium</span></button>
     <button data-page="settings"><i class="fas fa-sliders-h"></i><span>Settings</span></button>
+  </div>
+
+  <!-- ADMIN LOGIN PAGE (Separate from app) -->
+  <div id="adminLoginPage">
+    <div class="login-container">
+      <h2>🔐 Admin Login</h2>
+      <div style="margin:20px 0;">
+        <input id="adminEmail" placeholder="Email" style="width:100%; padding:14px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin-bottom:10px;">
+        <input id="adminPassword" type="password" placeholder="Password" style="width:100%; padding:14px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4;">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="adminLogin()">LOGIN TO ADMIN</button>
+      <div id="adminLoginError" style="color:#e74c3c; margin-top:12px; font-size:0.9rem;"></div>
+      <div style="margin-top:16px; font-size:0.7rem; color:#7a6a72; text-align:center;">
+        <p>Demo credentials:</p>
+        <p style="font-family: monospace; color:#ff4d94;">wilsoncoozy@gmail.com / JOTHAM1303</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="adminPanel">
+    <div class="admin-header">
+      <span class="admin-title">🔐 SECRETORA ADMIN</span>
+      <button class="btn btn-sm btn-outline" onclick="adminLogout()">Logout</button>
+    </div>
+    <div id="adminContent"></div>
   </div>
 
   <!-- MODAL -->
@@ -671,7 +838,7 @@ function saveState() {
 }
 
 // ============================================================
-// DEMO SECRETS (initial user vaults - real users)
+// DEMO SECRETS
 // ============================================================
 function seedDemoSecrets() {
   const demos = [
@@ -948,13 +1115,12 @@ function filterSecrets() {
 }
 
 // ============================================================
-// RENDER DISCOVERY (Homepage Vaults - Real Users Only)
+// RENDER DISCOVERY
 // ============================================================
 function renderDiscovery() {
   const container = document.getElementById('discoveryGrid');
   const countEl = document.getElementById('vaultCountDiscovery');
   
-  // Get only real user vaults that are public
   const publicVaults = APP.secrets.filter(sec => sec.isPublic && !sec.isDemo);
   
   if (!publicVaults.length) {
@@ -1219,7 +1385,7 @@ function submitTokenPayment(pkgId, ref) {
 }
 
 // ============================================================
-// SHOP - Enhanced Rendering
+// SHOP
 // ============================================================
 function renderShop(filter = 'all') {
   const container = document.getElementById('shopGrid');
@@ -1255,7 +1421,6 @@ function renderShop(filter = 'all') {
   });
   container.innerHTML = html;
   
-  // Update filter buttons
   document.querySelectorAll('.shop-filters .btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.shopFilter === filter);
   });
@@ -1362,6 +1527,150 @@ function applyTheme() {
 }
 
 // ============================================================
+// ADMIN FUNCTIONS
+// ============================================================
+function adminLogin() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass = document.getElementById('adminPassword').value.trim();
+  const error = document.getElementById('adminLoginError');
+  
+  if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
+    APP.adminLoggedIn = true;
+    saveState();
+    showAdminPanel();
+    error.innerText = '';
+  } else {
+    error.innerText = 'Invalid administrator credentials.';
+  }
+}
+
+function adminLogout() {
+  APP.adminLoggedIn = false;
+  saveState();
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('adminLoginPage').style.display = 'block';
+  document.getElementById('mainNav').style.display = 'flex';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-landing').classList.add('active');
+  // Update URL to remove #/admin
+  if (window.location.hash === '#/admin') {
+    window.location.hash = '';
+  }
+}
+
+function showAdminPanel() {
+  document.getElementById('adminLoginPage').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  document.getElementById('mainNav').style.display = 'none';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  renderAdminDashboard();
+}
+
+function renderAdminDashboard() {
+  const container = document.getElementById('adminContent');
+  const totalSecrets = APP.secrets.length;
+  const totalPayments = APP.payments.length;
+  const pendingPayments = APP.payments.filter(p => p.status === 'pending').length;
+  const approvedPayments = APP.payments.filter(p => p.status === 'approved').length;
+  const rejectedPayments = APP.payments.filter(p => p.status === 'rejected').length;
+  const totalRevenue = APP.payments.filter(p => p.status === 'approved').reduce((sum, p) => sum + (p.amount || 0), 0);
+  const premiumUsers = APP.membership !== 'free' ? 1 : 0;
+
+  let paymentsHtml = APP.payments.length ? APP.payments.map(p => `
+    <div class="payment-row">
+      <div class="payment-header">
+        <span class="payment-product">${p.product === 'subscription' ? PLANS[p.tier]?.name || p.tier : p.product}</span>
+        <span class="payment-status status-${p.status}">${p.status.toUpperCase()}</span>
+      </div>
+      <div class="payment-details">
+        $${p.amount?.toFixed(2) || '0.00'} · ${p.sender || 'N/A'} · Ref: ${p.reference || 'N/A'}
+      </div>
+      ${p.status === 'pending' ? `
+        <div class="payment-actions">
+          <button class="btn btn-sm btn-primary" onclick="approvePayment('${p.id}')">Approve</button>
+          <button class="btn btn-sm btn-outline" onclick="rejectPayment('${p.id}')">Reject</button>
+        </div>
+      ` : ''}
+    </div>
+  `).join('') : '<div style="color:#7a6a72; padding:20px 0; text-align:center;">No payments yet</div>';
+
+  container.innerHTML = `
+    <div class="admin-stats">
+      <div class="admin-stat"><div class="stat-value">${totalSecrets}</div><div class="stat-label">Total Secrets</div></div>
+      <div class="admin-stat"><div class="stat-value">${premiumUsers}</div><div class="stat-label">Premium Users</div></div>
+      <div class="admin-stat"><div class="stat-value">${totalPayments}</div><div class="stat-label">Total Payments</div></div>
+      <div class="admin-stat"><div class="stat-value">${pendingPayments}</div><div class="stat-label">Pending</div></div>
+      <div class="admin-stat"><div class="stat-value">${approvedPayments}</div><div class="stat-label">Approved</div></div>
+      <div class="admin-stat"><div class="stat-value">$${totalRevenue.toFixed(2)}</div><div class="stat-label">Revenue</div></div>
+    </div>
+    <h3 style="margin-bottom:10px; font-size:1rem;">📋 Payment Requests</h3>
+    ${paymentsHtml}
+    <div style="margin-top:16px; padding:12px; background:#f8f4f6; border-radius:12px; font-size:0.7rem; color:#7a6a72; text-align:center;">
+      <strong>Admin:</strong> wilsoncoozy@gmail.com
+    </div>
+  `;
+}
+
+function approvePayment(paymentId) {
+  const payment = APP.payments.find(p => p.id === paymentId);
+  if (!payment) return;
+  if (!confirm(`Approve payment ${payment.reference}?`)) return;
+
+  payment.status = 'approved';
+  payment.verifiedAt = new Date().toISOString();
+
+  if (payment.product === 'subscription' && payment.tier) {
+    APP.membership = payment.tier;
+    const plan = PLANS[payment.tier];
+    if (plan) APP.tokens += plan.tokens;
+    toast('✅ ' + plan.name + ' activated');
+  } else if (payment.product === 'tokens' && payment.tokens) {
+    APP.tokens += payment.tokens;
+    toast('✅ ' + payment.tokens + ' tokens added');
+  }
+
+  if (payment.secretData) {
+    const data = payment.secretData;
+    const theme = document.getElementById('secTheme')?.value || 'Luxury Pink';
+    const category = document.getElementById('secCategory')?.value || '❤️ Love';
+    const recipient = document.getElementById('secRecipient')?.value || 'Someone';
+    APP.secrets.push({
+      id: 'sec_' + Date.now(),
+      name: data.name,
+      description: data.desc,
+      content: data.content,
+      password: data.pass,
+      type: 'text',
+      tier: data.tier,
+      theme,
+      category,
+      recipient,
+      createdAt: new Date().toISOString(),
+      unlocks: 0,
+      isPublic: data.isPublic !== undefined ? data.isPublic : true,
+      isDemo: false,
+      creator: APP.settings.profileName || 'User'
+    });
+    toast('✅ Premium secret created!');
+  }
+
+  saveState();
+  updateUI();
+  renderAdminDashboard();
+  toast('✓ Payment approved');
+}
+
+function rejectPayment(paymentId) {
+  const payment = APP.payments.find(p => p.id === paymentId);
+  if (!payment) return;
+  if (!confirm(`Reject payment ${payment.reference}?`)) return;
+  payment.status = 'rejected';
+  saveState();
+  renderAdminDashboard();
+  toast('✗ Payment rejected');
+}
+
+// ============================================================
 // UTILITIES
 // ============================================================
 function toast(msg) {
@@ -1375,6 +1684,22 @@ function toast(msg) {
 
 function copyText(text) {
   navigator.clipboard?.writeText(text).then(() => toast('✓ Copied')).catch(() => toast('Copy manually'));
+}
+
+// ============================================================
+// CHECK FOR ADMIN ROUTE ON LOAD
+// ============================================================
+function checkAdminRoute() {
+  if (window.location.hash === '#/admin') {
+    if (APP.adminLoggedIn) {
+      showAdminPanel();
+    } else {
+      document.getElementById('adminLoginPage').style.display = 'block';
+      document.getElementById('adminPanel').style.display = 'none';
+      document.getElementById('mainNav').style.display = 'none';
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    }
+  }
 }
 
 // ============================================================
@@ -1401,9 +1726,20 @@ function init() {
     if (sec) setTimeout(() => openUnlockModal(sec.id), 600);
   }
 
-  navigateTo('landing');
-  toast('💕 Secretora · Private Vault');
+  // Check for admin route
+  checkAdminRoute();
+
+  // If no admin route, show landing
+  if (!window.location.hash || window.location.hash !== '#/admin') {
+    navigateTo('landing');
+    toast('💕 Secretora · Private Vault');
+  }
 }
+
+// Listen for hash changes
+window.addEventListener('hashchange', function() {
+  checkAdminRoute();
+});
 
 document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === this) this.classList.remove('show');
