@@ -132,7 +132,6 @@
     .bottom-nav button.active { color: #ff4d94; }
     .bottom-nav button:active { transform: scale(0.92); }
 
-    /* Page routing - only one page visible at a time */
     .page { 
       display: none; 
       padding: 12px 16px 30px; 
@@ -648,6 +647,33 @@
       color: #ff4d94;
     }
 
+    /* Applied items display in create page */
+    .applied-items {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 8px 0;
+      margin-bottom: 10px;
+    }
+    .applied-item {
+      background: rgba(255, 77, 148, 0.08);
+      border: 1px solid rgba(255, 77, 148, 0.15);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .applied-item .remove-item {
+      cursor: pointer;
+      color: #e74c3c;
+      font-size: 0.6rem;
+    }
+    .applied-item .remove-item:hover {
+      color: #c0392b;
+    }
+
     @media (max-width: 500px) { #app { border-radius: 0; min-height: 100vh; } .bottom-nav { padding: 2px 0 10px; } }
   </style>
 </head>
@@ -724,6 +750,15 @@
   <!-- PAGE: CREATE -->
   <div id="page-create" class="page">
     <h2 style="font-size:1.2rem; color:#ff4d94;">✧ New Vault</h2>
+    
+    <!-- Applied Items Display -->
+    <div style="margin: 10px 0;">
+      <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">Applied Items:</div>
+      <div id="appliedItemsContainer" class="applied-items">
+        <span style="font-size:0.7rem; color:#9a8a92;">No items applied</span>
+      </div>
+    </div>
+
     <div style="background:transparent; padding:0;">
       <div style="margin-bottom:10px;"><input id="secName" placeholder="Vault name" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; color:#1a0e14;"></div>
       <div style="margin-bottom:10px;"><input id="secDesc" placeholder="Description" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; color:#1a0e14;"></div>
@@ -922,7 +957,8 @@ let APP = {
   shopFilter: 'all',
   adminLoggedIn: false,
   pendingPurchases: [],
-  currentUser: null
+  currentUser: null,
+  appliedItems: { box: null, theme: null, effect: null }
 };
 
 // ============================================================
@@ -1003,7 +1039,8 @@ function handleAuth() {
       owned: [],
       transactions: [],
       payments: [],
-      dailyReward: { lastClaim: null, streak: 0 }
+      dailyReward: { lastClaim: null, streak: 0 },
+      appliedItems: { box: null, theme: null, effect: null }
     };
     localStorage.setItem('secretora_user_data_' + username, JSON.stringify(userData));
     
@@ -1030,8 +1067,10 @@ function loadUserData(username) {
   APP.transactions = data.transactions || [];
   APP.payments = data.payments || [];
   APP.dailyReward = data.dailyReward || { lastClaim: null, streak: 0 };
+  APP.appliedItems = data.appliedItems || { box: null, theme: null, effect: null };
   
   document.getElementById('userNameDisplay').textContent = user.displayName || username;
+  updateAppliedItemsDisplay();
 }
 
 function saveUserData() {
@@ -1045,7 +1084,8 @@ function saveUserData() {
     owned: [...APP.owned],
     transactions: APP.transactions,
     payments: APP.payments,
-    dailyReward: APP.dailyReward
+    dailyReward: APP.dailyReward,
+    appliedItems: APP.appliedItems
   };
   localStorage.setItem('secretora_user_data_' + APP.currentUser, JSON.stringify(data));
 }
@@ -1096,6 +1136,70 @@ function checkAuth() {
 }
 
 // ============================================================
+// APPLIED ITEMS FUNCTIONS
+// ============================================================
+function updateAppliedItemsDisplay() {
+  const container = document.getElementById('appliedItemsContainer');
+  const items = [];
+  
+  if (APP.appliedItems.box) {
+    const box = SHOP_ITEMS.find(i => i.id === APP.appliedItems.box);
+    if (box) items.push({ type: 'box', name: box.name, icon: box.icon, id: box.id });
+  }
+  if (APP.appliedItems.theme) {
+    const theme = SHOP_ITEMS.find(i => i.id === APP.appliedItems.theme);
+    if (theme) items.push({ type: 'theme', name: theme.name, icon: theme.icon, id: theme.id });
+  }
+  if (APP.appliedItems.effect) {
+    const effect = SHOP_ITEMS.find(i => i.id === APP.appliedItems.effect);
+    if (effect) items.push({ type: 'effect', name: effect.name, icon: effect.icon, id: effect.id });
+  }
+  
+  if (items.length === 0) {
+    container.innerHTML = '<span style="font-size:0.7rem; color:#9a8a92;">No items applied</span>';
+    return;
+  }
+  
+  container.innerHTML = items.map(item => `
+    <span class="applied-item">
+      ${item.icon} ${item.name}
+      <span class="remove-item" onclick="removeAppliedItem('${item.type}')">×</span>
+    </span>
+  `).join('');
+}
+
+function removeAppliedItem(type) {
+  APP.appliedItems[type] = null;
+  saveUserData();
+  updateAppliedItemsDisplay();
+  toast('🗑️ Removed ' + type);
+}
+
+function applyItemToCreation(itemId) {
+  const item = SHOP_ITEMS.find(i => i.id === itemId);
+  if (!item) return;
+  
+  // Check if user owns the item
+  if (!APP.owned.has(itemId)) {
+    toast('❌ You don\'t own this item. Purchase it first!');
+    return;
+  }
+  
+  // Apply based on category
+  if (item.category === 'box') {
+    APP.appliedItems.box = itemId;
+  } else if (item.category === 'theme') {
+    APP.appliedItems.theme = itemId;
+  } else if (item.category === 'effect') {
+    APP.appliedItems.effect = itemId;
+  }
+  
+  saveUserData();
+  updateAppliedItemsDisplay();
+  toast('✅ Applied ' + item.name + ' to your vault!');
+}
+
+// ============================================================
 // SECRET FUNCTIONS
 // ============================================================
 function handleCreateSecret() {
@@ -1122,6 +1226,25 @@ function createSecretNow(data) {
   const theme = document.getElementById('secTheme').value;
   const category = document.getElementById('secCategory').value;
   const recipient = document.getElementById('secRecipient').value || 'Someone';
+  
+  // Get applied items info
+  let appliedBox = null;
+  let appliedTheme = null;
+  let appliedEffect = null;
+  
+  if (APP.appliedItems.box) {
+    const box = SHOP_ITEMS.find(i => i.id === APP.appliedItems.box);
+    if (box) appliedBox = box.name;
+  }
+  if (APP.appliedItems.theme) {
+    const th = SHOP_ITEMS.find(i => i.id === APP.appliedItems.theme);
+    if (th) appliedTheme = th.name;
+  }
+  if (APP.appliedItems.effect) {
+    const ef = SHOP_ITEMS.find(i => i.id === APP.appliedItems.effect);
+    if (ef) appliedEffect = ef.name;
+  }
+  
   const secret = {
     id: 'sec_' + Date.now() + '_' + APP.currentUser,
     name: data.name,
@@ -1130,95 +1253,26 @@ function createSecretNow(data) {
     password: data.pass,
     type: 'text',
     tier: data.tier,
-    theme,
-    category,
-    recipient,
+    theme: theme,
+    category: category,
+    recipient: recipient,
     createdAt: new Date().toISOString(),
     unlocks: 0,
     isPublic: data.isPublic !== undefined ? data.isPublic : true,
     isDemo: false,
     creator: APP.settings.profileName || APP.currentUser,
-    userId: APP.currentUser
+    userId: APP.currentUser,
+    appliedBox: appliedBox,
+    appliedTheme: appliedTheme,
+    appliedEffect: appliedEffect
   };
   APP.secrets.push(secret);
   saveState();
-  toast('✓ Vault created 🔐');
+  toast('✓ Vault created 🔐' + (appliedBox ? ' with ' + appliedBox : ''));
   navigateTo('vault');
   renderVault();
   renderDiscovery();
   ['secName','secDesc','secContent','secPass','secPass2','secRecipient'].forEach(id => document.getElementById(id).value='');
-}
-
-function showTierPurchaseModal(tier, secretData) {
-  const plan = PLANS[tier];
-  if (!plan) return;
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  const ref = 'SEC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-  content.innerHTML = `
-    <div style="text-align:center;">
-      <h3 style="color:#ff4d94;">👑 ${plan.name} SECRET</h3>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <p style="color:#7a6a72;">This secret requires ${plan.name} access.</p>
-        <div style="font-size:1.2rem; font-weight:600; color:#ff4d94;">$${plan.price.toFixed(2)}</div>
-        <div style="font-size:0.8rem; color:#7a6a72;">🔒 Not yet unlocked</div>
-      </div>
-      <button class="btn btn-primary btn-block" onclick="startTierPayment('${tier}', '${ref}', '${secretData.name}', '${secretData.desc}', '${secretData.content}', '${secretData.pass}', '${secretData.isPublic}')">CONTINUE TO PAYMENT</button>
-      <button class="btn btn-sm btn-outline mt-2" onclick="document.getElementById('modalOverlay').classList.remove('show')">Cancel</button>
-    </div>
-  `;
-  overlay.classList.add('show');
-}
-
-function startTierPayment(tier, ref, name, desc, content, pass, isPublic) {
-  document.getElementById('modalOverlay').classList.remove('show');
-  const plan = PLANS[tier];
-  const overlay = document.getElementById('modalOverlay');
-  const modalContent = document.getElementById('modalContent');
-  modalContent.innerHTML = `
-    <div style="text-align:center;">
-      <h3 style="color:#ff4d94;">💳 Complete Payment</h3>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <div style="color:#7a6a72;">Send payment to:</div>
-        <div style="font-size:1.3rem; font-weight:600; color:#ffd700;">${PAYMENT_NUMBER}</div>
-        <button class="btn btn-sm btn-outline" onclick="copyText('${PAYMENT_NUMBER}')"><i class="fas fa-copy"></i> Copy</button>
-      </div>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <div>Amount: <strong>$${plan.price.toFixed(2)}</strong></div>
-        <div>Plan: <strong>${plan.name}</strong></div>
-        <div style="font-size:0.8rem; color:#7a6a72;">Reference: <span style="color:#ffd700; font-weight:600;">${ref}</span></div>
-        <button class="btn btn-sm btn-outline" onclick="copyText('${ref}')"><i class="fas fa-copy"></i> Copy Reference</button>
-      </div>
-      <input id="paymentRef" placeholder="Payment reference" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin:6px 0;">
-      <input id="paymentSender" placeholder="Your name" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin:6px 0;">
-      <input id="paymentPhone" placeholder="Phone used" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin:6px 0;">
-      <button class="btn btn-primary btn-block mt-2" onclick="submitTierPayment('${tier}', '${ref}', '${name}', '${desc}', '${content}', '${pass}', '${isPublic}')"><i class="fas fa-check"></i> SUBMIT PAYMENT</button>
-    </div>
-  `;
-  overlay.classList.add('show');
-}
-
-function submitTierPayment(tier, ref, name, desc, content, pass, isPublic) {
-  const refInput = document.getElementById('paymentRef').value.trim();
-  const sender = document.getElementById('paymentSender').value.trim();
-  const phone = document.getElementById('paymentPhone').value.trim();
-  if (!refInput || !sender || !phone) { toast('Please fill all fields'); return; }
-  const plan = PLANS[tier];
-  APP.payments.push({
-    id: 'pay_' + Date.now(),
-    product: 'subscription',
-    tier: tier,
-    reference: refInput,
-    sender,
-    phone,
-    amount: plan.price,
-    status: 'pending',
-    secretData: { name, desc, content, pass, tier, isPublic: isPublic === 'true' },
-    createdAt: new Date().toISOString()
-  });
-  saveState();
-  document.getElementById('modalOverlay').classList.remove('show');
-  toast('📩 Payment submitted for verification');
 }
 
 // ============================================================
@@ -1237,9 +1291,17 @@ function renderVault(filter = '') {
     const tierClass = s.tier === 'premium' ? 'premium' : (s.tier === 'vip' ? 'vip' : (s.tier === 'luxury' ? 'luxury' : (s.tier === 'ultimate' ? 'ultimate' : '')));
     const badge = s.tier === 'premium' ? '💕 PREMIUM' : (s.tier === 'vip' ? '👑 VIP' : (s.tier === 'luxury' ? '✨ LUXURY' : (s.tier === 'ultimate' ? '🌟 ULTIMATE' : '🔒')));
     const badgeCls = s.tier === 'premium' ? 'badge-gold' : (s.tier === 'vip' ? 'badge-vip' : (s.tier === 'luxury' ? 'badge-luxury' : (s.tier === 'ultimate' ? 'badge-ultimate' : '')));
+    
+    // Show applied items if any
+    let appliedInfo = '';
+    if (s.appliedBox) appliedInfo += ' 📦' + s.appliedBox;
+    if (s.appliedTheme) appliedInfo += ' 🎨' + s.appliedTheme;
+    if (s.appliedEffect) appliedInfo += ' ✨' + s.appliedEffect;
+    
     html += `<div class="vault-card ${tierClass}">
       <div class="flex-between"><span style="font-weight:600;">${s.name}</span><span class="badge ${badgeCls}">${badge}</span></div>
       <div style="color:#7a6a72; font-size:0.85rem;">${s.description || ''}</div>
+      <div style="font-size:0.65rem; color:#9a8a92;">${appliedInfo}</div>
       <div style="display:flex; gap:6px; font-size:0.7rem; color:#9a8a92;">${s.category||'📁'} ${s.recipient ? '👤 '+s.recipient : ''}</div>
       <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
         <button class="btn btn-sm btn-outline" onclick="openUnlockModal('${s.id}')"><i class="fas fa-unlock-alt"></i> Open</button>
@@ -1365,6 +1427,9 @@ function showSecretView(sec) {
         <div style="color:#7a6a72; margin:8px 0;">${sec.description || ''}</div>
         <div style="background:#f8f4f6; border-radius:16px; padding:20px; margin:12px 0; border-left:4px solid #ff4d94; white-space:pre-wrap;">${sec.content}</div>
         <div style="display:flex; flex-wrap:wrap; gap:6px; font-size:0.7rem; color:#7a6a72;">📅 ${new Date(sec.createdAt).toLocaleDateString()} 👤 ${sec.recipient||'Anonymous'}</div>
+        ${sec.appliedBox ? `<div style="font-size:0.7rem; color:#7a6a72;">📦 Box: ${sec.appliedBox}</div>` : ''}
+        ${sec.appliedTheme ? `<div style="font-size:0.7rem; color:#7a6a72;">🎨 Theme: ${sec.appliedTheme}</div>` : ''}
+        ${sec.appliedEffect ? `<div style="font-size:0.7rem; color:#7a6a72;">✨ Effect: ${sec.appliedEffect}</div>` : ''}
         <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;">
           <button class="btn btn-sm btn-outline" onclick="copySecret('${sec.content}')"><i class="fas fa-copy"></i> Copy</button>
           <button class="btn btn-sm btn-outline" onclick="toggleFavorite('${sec.id}');renderFavorites();"><i class="fas fa-star"></i> Favorite</button>
@@ -1463,16 +1528,20 @@ function renderShop(filter = 'all') {
     const canAfford = APP.tokens >= item.price;
     const rarityClass = 'rarity-' + (item.rarity || 'common');
     const tierLabel = item.tier ? `<span class="tier-required">${item.tier.toUpperCase()}</span>` : '';
+    const isApplied = (item.category === 'box' && APP.appliedItems.box === item.id) ||
+                      (item.category === 'theme' && APP.appliedItems.theme === item.id) ||
+                      (item.category === 'effect' && APP.appliedItems.effect === item.id);
     
     html += `<div class="shop-item">
       ${owned ? '<span class="owned-badge">✓ OWNED</span>' : ''}
+      ${isApplied ? '<span class="owned-badge" style="background:#ff4d94;">✓ APPLIED</span>' : ''}
       <div class="item-icon">${item.icon}</div>
       <div class="item-name">${item.name}</div>
       <div class="item-price">🪙 ${item.price}</div>
       <span class="rarity ${rarityClass}">${item.rarity?.toUpperCase() || 'COMMON'}</span>
       ${tierLabel}
       <button class="btn btn-sm ${owned ? 'btn-outline' : 'btn-primary'}" onclick="buyShopItem('${item.id}')" ${locked ? 'disabled style="opacity:0.5;"' : ''}>
-        ${owned ? '✓ Owned' : (locked ? '🔒 Locked' : (canAfford ? 'Buy Now' : '🪙 Insufficient'))}
+        ${owned ? (isApplied ? '✓ Applied' : 'Apply to Vault') : (locked ? '🔒 Locked' : (canAfford ? 'Buy Now' : '🪙 Insufficient'))}
       </button>
     </div>`;
   });
@@ -1486,10 +1555,17 @@ function renderShop(filter = 'all') {
 function buyShopItem(itemId) {
   const item = SHOP_ITEMS.find(i => i.id === itemId);
   if (!item) return;
-  if (APP.owned.has(itemId)) { toast('Already owned'); return; }
+  
+  // If already owned, apply it instead of buying
+  if (APP.owned.has(itemId)) {
+    applyItemToCreation(itemId);
+    return;
+  }
+  
   if (item.tier && APP.membership !== item.tier) { toast('🔒 ' + item.tier.toUpperCase() + ' membership required'); return; }
   if (APP.tokens < item.price) { toast('Need ' + (item.price - APP.tokens) + ' more tokens'); return; }
   if (!confirm(`Purchase ${item.name} for ${item.price} tokens?`)) return;
+  
   APP.tokens -= item.price;
   APP.owned.add(itemId);
   APP.transactions.push({ type: 'shop', item: item.name, amount: -item.price, date: new Date().toISOString() });
@@ -1497,6 +1573,11 @@ function buyShopItem(itemId) {
   updateUI();
   renderShop(APP.shopFilter);
   toast('✅ ' + item.name + ' purchased!');
+  
+  // Auto-apply if it's a box, theme, or effect
+  if (item.category === 'box' || item.category === 'theme' || item.category === 'effect') {
+    applyItemToCreation(itemId);
+  }
 }
 
 function filterShop(category) {
@@ -1515,6 +1596,7 @@ function updateUI() {
   renderShop(APP.shopFilter);
   renderDiscovery();
   renderVault();
+  updateAppliedItemsDisplay();
 }
 
 function toggleTokenPanel() {
@@ -1538,26 +1620,23 @@ function toggleTokenPanel() {
 // NAVIGATION
 // ============================================================
 function navigateTo(page) {
-  // Hide all pages
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   
-  // Show the target page
   const target = document.getElementById('page-' + page);
   if (target) target.classList.add('active');
   
-  // Update nav buttons
   document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.bottom-nav button').forEach(b => {
     if (b.dataset.page === page) b.classList.add('active');
   });
   
-  // Render content for specific pages
   if (page === 'vault') renderVault();
   if (page === 'favorites') renderFavorites();
   if (page === 'shop') renderShop(APP.shopFilter);
   if (page === 'premium') { renderPlans(); renderTokenPackages(); }
   if (page === 'settings') loadSettings();
   if (page === 'landing') renderDiscovery();
+  if (page === 'create') updateAppliedItemsDisplay();
   
   document.getElementById('modalOverlay').classList.remove('show');
 }
