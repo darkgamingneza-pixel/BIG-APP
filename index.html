@@ -237,7 +237,6 @@
     }
     body.dark .vault-card.ultimate { background: linear-gradient(145deg, #1a1020, #0a0a1a); }
 
-    /* Premium Tier Glow Animations */
     .vault-card.premium { animation: premiumGlow 3s infinite; }
     @keyframes premiumGlow {
       0% { box-shadow: 0 0 10px rgba(255,215,0,0.1); }
@@ -263,7 +262,6 @@
       100% { box-shadow: 0 0 10px rgba(224,200,255,0.1); }
     }
 
-    /* Premium Badge Styles */
     .badge {
       background: #f0e8ec; padding: 2px 10px; border-radius: 40px;
       font-size: 0.65rem; font-weight: 500;
@@ -306,7 +304,6 @@
       background: #1a1020;
       border-color: #2a1a2a;
     }
-    /* Premium Discovery Cards */
     .vault-discovery-card.premium-discovery {
       border-color: #ffd700;
       box-shadow: 0 0 20px rgba(255,215,0,0.15);
@@ -757,6 +754,7 @@
     .preview-box-container {
       position: relative;
       transition: all 0.3s;
+      overflow: hidden;
     }
     .preview-box-container.glow { animation: boxGlow 2s infinite; }
     @keyframes boxGlow {
@@ -788,6 +786,34 @@
       50% { box-shadow: 0 0 40px rgba(224, 200, 255, 0.8), 0 0 80px rgba(224, 200, 255, 0.3); }
       100% { box-shadow: 0 0 10px rgba(224, 200, 255, 0.3); }
     }
+
+    /* Floating particles animations */
+    .particles-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 20px;
+    }
+    .particle {
+      position: absolute;
+      font-size: 1.2rem;
+      animation: floatParticle linear infinite;
+      opacity: 0.7;
+    }
+    @keyframes floatParticle {
+      0% { transform: translateY(100%) translateX(0px) scale(0.5); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(-100%) translateX(50px) scale(1); opacity: 0; }
+    }
+    .particle-heart { animation-duration: 4s; }
+    .particle-star { animation-duration: 5s; }
+    .particle-flower { animation-duration: 6s; }
+    .particle-bubble { animation-duration: 3.5s; }
 
     /* Theme preview styles */
     .theme-preview {
@@ -830,18 +856,48 @@
       color: #e8d0f0;
     }
 
-    /* Applied box icon in creation */
     .applied-box-icon {
       font-size: 3rem;
       display: block;
       text-align: center;
       margin: 4px 0;
+      position: relative;
+      z-index: 2;
     }
     .applied-box-name {
       font-size: 0.7rem;
       color: #ffd700;
       text-align: center;
       font-weight: 600;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Glow color picker */
+    .glow-color-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 8px 0;
+    }
+    .glow-color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid #e8e0e4;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .glow-color-option:hover {
+      transform: scale(1.1);
+    }
+    .glow-color-option.selected {
+      border-color: #ff4d94;
+      box-shadow: 0 0 15px rgba(255, 77, 148, 0.4);
+    }
+    body.dark .glow-color-option {
+      border-color: #3a2a32;
     }
 
     @media (max-width: 500px) { #app { border-radius: 0; min-height: 100vh; } .bottom-nav { padding: 2px 0 10px; } }
@@ -929,9 +985,37 @@
       </div>
     </div>
 
-    <!-- Premium Box Preview with Glow -->
-    <div id="boxPreviewContainer" class="preview-box-container" style="margin: 10px 0; padding: 16px; border-radius: 20px; background: #f8f4f6; text-align: center; border: 2px solid #e8e0e4; transition: all 0.3s;">
-      <div id="boxPreviewContent">
+    <!-- Glow Color Picker -->
+    <div style="margin: 10px 0;">
+      <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">Choose Glow Color:</div>
+      <div class="glow-color-options" id="glowColorOptions">
+        <div class="glow-color-option selected" style="background: #ffd700;" onclick="selectGlowColor('#ffd700', this)"></div>
+        <div class="glow-color-option" style="background: #ff4d94;" onclick="selectGlowColor('#ff4d94', this)"></div>
+        <div class="glow-color-option" style="background: #9b59b6;" onclick="selectGlowColor('#9b59b6', this)"></div>
+        <div class="glow-color-option" style="background: #00ccff;" onclick="selectGlowColor('#00ccff', this)"></div>
+        <div class="glow-color-option" style="background: #ff6b8a;" onclick="selectGlowColor('#ff6b8a', this)"></div>
+        <div class="glow-color-option" style="background: #c9a84c;" onclick="selectGlowColor('#c9a84c', this)"></div>
+        <div class="glow-color-option" style="background: #e0c8ff;" onclick="selectGlowColor('#e0c8ff', this)"></div>
+        <div class="glow-color-option" style="background: #ff3333;" onclick="selectGlowColor('#ff3333', this)"></div>
+      </div>
+    </div>
+
+    <!-- Particle Effect Selector -->
+    <div style="margin: 10px 0;">
+      <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">Choose Particle Effect:</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-sm btn-outline selected-effect" data-effect="none" onclick="selectParticleEffect('none', this)">None</button>
+        <button class="btn btn-sm btn-outline" data-effect="heart" onclick="selectParticleEffect('heart', this)">❤️ Hearts</button>
+        <button class="btn btn-sm btn-outline" data-effect="star" onclick="selectParticleEffect('star', this)">⭐ Stars</button>
+        <button class="btn btn-sm btn-outline" data-effect="flower" onclick="selectParticleEffect('flower', this)">🌸 Flowers</button>
+        <button class="btn btn-sm btn-outline" data-effect="bubble" onclick="selectParticleEffect('bubble', this)">🫧 Bubbles</button>
+      </div>
+    </div>
+
+    <!-- Premium Box Preview with Glow and Particles -->
+    <div id="boxPreviewContainer" class="preview-box-container" style="margin: 10px 0; padding: 16px; border-radius: 20px; background: #f8f4f6; text-align: center; border: 2px solid #e8e0e4; transition: all 0.3s; position: relative; overflow: hidden;">
+      <div class="particles-container" id="particlesContainer"></div>
+      <div id="boxPreviewContent" style="position: relative; z-index: 2;">
         <div style="font-size: 2.5rem; margin-bottom: 4px;">🔐</div>
         <div style="font-size: 0.7rem; color: #7a6a72;">No box applied</div>
       </div>
@@ -1142,7 +1226,9 @@ let APP = {
   adminLoggedIn: false,
   pendingPurchases: [],
   currentUser: null,
-  appliedItems: { box: null, theme: null, effect: null }
+  appliedItems: { box: null, theme: null, effect: null },
+  glowColor: '#ffd700',
+  particleEffect: 'none'
 };
 
 // ============================================================
@@ -1224,7 +1310,9 @@ function handleAuth() {
       transactions: [],
       payments: [],
       dailyReward: { lastClaim: null, streak: 0 },
-      appliedItems: { box: null, theme: null, effect: null }
+      appliedItems: { box: null, theme: null, effect: null },
+      glowColor: '#ffd700',
+      particleEffect: 'none'
     };
     localStorage.setItem('secretora_user_data_' + username, JSON.stringify(userData));
     
@@ -1252,11 +1340,15 @@ function loadUserData(username) {
   APP.payments = data.payments || [];
   APP.dailyReward = data.dailyReward || { lastClaim: null, streak: 0 };
   APP.appliedItems = data.appliedItems || { box: null, theme: null, effect: null };
+  APP.glowColor = data.glowColor || '#ffd700';
+  APP.particleEffect = data.particleEffect || 'none';
   
   document.getElementById('userNameDisplay').textContent = user.displayName || username;
   updateAppliedItemsDisplay();
   updateBoxPreview();
   updateThemePreview();
+  updateGlowColorUI();
+  updateParticleEffectUI();
 }
 
 function saveUserData() {
@@ -1271,7 +1363,9 @@ function saveUserData() {
     transactions: APP.transactions,
     payments: APP.payments,
     dailyReward: APP.dailyReward,
-    appliedItems: APP.appliedItems
+    appliedItems: APP.appliedItems,
+    glowColor: APP.glowColor,
+    particleEffect: APP.particleEffect
   };
   localStorage.setItem('secretora_user_data_' + APP.currentUser, JSON.stringify(data));
 }
@@ -1322,6 +1416,82 @@ function checkAuth() {
 }
 
 // ============================================================
+// GLOW COLOR & PARTICLE FUNCTIONS
+// ============================================================
+function selectGlowColor(color, element) {
+  document.querySelectorAll('.glow-color-option').forEach(el => el.classList.remove('selected'));
+  if (element) element.classList.add('selected');
+  APP.glowColor = color;
+  saveUserData();
+  updateBoxPreview();
+}
+
+function selectParticleEffect(effect, element) {
+  document.querySelectorAll('[data-effect]').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('[data-effect]').forEach(el => el.style.background = '');
+  document.querySelectorAll('[data-effect]').forEach(el => el.style.color = '');
+  if (element) {
+    element.classList.add('active');
+    element.style.background = '#ff4d94';
+    element.style.color = 'white';
+  }
+  APP.particleEffect = effect;
+  saveUserData();
+  updateBoxPreview();
+}
+
+function updateGlowColorUI() {
+  document.querySelectorAll('.glow-color-option').forEach(el => {
+    el.classList.toggle('selected', el.style.backgroundColor === APP.glowColor || el.style.background === APP.glowColor);
+  });
+}
+
+function updateParticleEffectUI() {
+  document.querySelectorAll('[data-effect]').forEach(el => {
+    el.classList.remove('active');
+    el.style.background = '';
+    el.style.color = '';
+    if (el.dataset.effect === APP.particleEffect) {
+      el.classList.add('active');
+      el.style.background = '#ff4d94';
+      el.style.color = 'white';
+    }
+  });
+}
+
+// ============================================================
+// PARTICLES GENERATOR
+// ============================================================
+function generateParticles() {
+  const container = document.getElementById('particlesContainer');
+  container.innerHTML = '';
+  
+  if (APP.particleEffect === 'none') return;
+  
+  const emojis = {
+    heart: ['❤️', '💕', '💗', '💖', '💝'],
+    star: ['⭐', '✨', '🌟', '💫'],
+    flower: ['🌸', '🌹', '🌺', '🌷', '🌻', '🌼'],
+    bubble: ['🫧', '○', '◯', '∘']
+  };
+  
+  const selectedEmojis = emojis[APP.particleEffect] || ['✨'];
+  const count = 12;
+  
+  for (let i = 0; i < count; i++) {
+    const particle = document.createElement('div');
+    particle.className = `particle particle-${APP.particleEffect}`;
+    particle.textContent = selectedEmojis[Math.floor(Math.random() * selectedEmojis.length)];
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+    particle.style.animationDelay = (Math.random() * 4) + 's';
+    particle.style.animationDuration = (3 + Math.random() * 3) + 's';
+    particle.style.opacity = 0.3 + Math.random() * 0.5;
+    container.appendChild(particle);
+  }
+}
+
+// ============================================================
 // APPLIED ITEMS FUNCTIONS
 // ============================================================
 function updateAppliedItemsDisplay() {
@@ -1367,10 +1537,15 @@ function updateBoxPreview() {
   const container = document.getElementById('boxPreviewContainer');
   const content = document.getElementById('boxPreviewContent');
   
+  // Reset glow classes
+  container.classList.remove('glow', 'glow-pink', 'glow-vip', 'glow-luxury', 'glow-ultimate');
+  
+  // Apply custom glow color
+  const glowColor = APP.glowColor;
+  
   if (APP.appliedItems.box) {
     const box = SHOP_ITEMS.find(i => i.id === APP.appliedItems.box);
     if (box) {
-      container.classList.remove('glow', 'glow-pink', 'glow-vip', 'glow-luxury', 'glow-ultimate');
       if (box.glowClass) {
         container.classList.add(box.glowClass);
       }
@@ -1379,15 +1554,16 @@ function updateBoxPreview() {
         <div class="applied-box-name">✨ ${box.name}</div>
         <div style="font-size:0.6rem; color:#7a6a72; margin-top:4px;">Premium Box Applied</div>
       `;
-      return;
     }
+  } else {
+    content.innerHTML = `
+      <div style="font-size: 2.5rem; margin-bottom: 4px;">🔐</div>
+      <div style="font-size: 0.7rem; color: #7a6a72;">No box applied</div>
+    `;
   }
   
-  container.classList.remove('glow', 'glow-pink', 'glow-vip', 'glow-luxury', 'glow-ultimate');
-  content.innerHTML = `
-    <div style="font-size: 2.5rem; margin-bottom: 4px;">🔐</div>
-    <div style="font-size: 0.7rem; color: #7a6a72;">No box applied</div>
-  `;
+  // Generate particles
+  generateParticles();
 }
 
 function updateThemePreview() {
@@ -1495,7 +1671,9 @@ function createSecretNow(data) {
     userId: APP.currentUser,
     appliedBox: appliedBox,
     appliedTheme: appliedTheme,
-    appliedEffect: appliedEffect
+    appliedEffect: appliedEffect,
+    glowColor: APP.glowColor,
+    particleEffect: APP.particleEffect
   };
   APP.secrets.push(secret);
   saveState();
@@ -1504,78 +1682,6 @@ function createSecretNow(data) {
   renderVault();
   renderDiscovery();
   ['secName','secDesc','secContent','secPass','secPass2','secRecipient'].forEach(id => document.getElementById(id).value='');
-}
-
-function showTierPurchaseModal(tier, secretData) {
-  const plan = PLANS[tier];
-  if (!plan) return;
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  const ref = 'SEC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-  content.innerHTML = `
-    <div style="text-align:center;">
-      <h3 style="color:#ff4d94;">👑 ${plan.name} SECRET</h3>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <p style="color:#7a6a72;">This secret requires ${plan.name} access.</p>
-        <div style="font-size:1.2rem; font-weight:600; color:#ff4d94;">$${plan.price.toFixed(2)}</div>
-        <div style="font-size:0.8rem; color:#7a6a72;">🔒 Not yet unlocked</div>
-      </div>
-      <button class="btn btn-primary btn-block" onclick="startTierPayment('${tier}', '${ref}', '${secretData.name}', '${secretData.desc}', '${secretData.content}', '${secretData.pass}', '${secretData.isPublic}')">CONTINUE TO PAYMENT</button>
-      <button class="btn btn-sm btn-outline mt-2" onclick="document.getElementById('modalOverlay').classList.remove('show')">Cancel</button>
-    </div>
-  `;
-  overlay.classList.add('show');
-}
-
-function startTierPayment(tier, ref, name, desc, content, pass, isPublic) {
-  document.getElementById('modalOverlay').classList.remove('show');
-  const plan = PLANS[tier];
-  const overlay = document.getElementById('modalOverlay');
-  const modalContent = document.getElementById('modalContent');
-  modalContent.innerHTML = `
-    <div style="text-align:center;">
-      <h3 style="color:#ff4d94;">💳 Complete Payment</h3>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <div style="color:#7a6a72;">Send payment to:</div>
-        <div style="font-size:1.3rem; font-weight:600; color:#ffd700;">${PAYMENT_NUMBER}</div>
-        <button class="btn btn-sm btn-outline" onclick="copyText('${PAYMENT_NUMBER}')"><i class="fas fa-copy"></i> Copy</button>
-      </div>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <div>Amount: <strong>$${plan.price.toFixed(2)}</strong></div>
-        <div>Plan: <strong>${plan.name}</strong></div>
-        <div style="font-size:0.8rem; color:#7a6a72;">Reference: <span style="color:#ffd700; font-weight:600;">${ref}</span></div>
-        <button class="btn btn-sm btn-outline" onclick="copyText('${ref}')"><i class="fas fa-copy"></i> Copy Reference</button>
-      </div>
-      <input id="paymentRef" placeholder="Payment reference" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin:6px 0;">
-      <input id="paymentSender" placeholder="Your name" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin:6px 0;">
-      <input id="paymentPhone" placeholder="Phone used" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin:6px 0;">
-      <button class="btn btn-primary btn-block mt-2" onclick="submitTierPayment('${tier}', '${ref}', '${name}', '${desc}', '${content}', '${pass}', '${isPublic}')"><i class="fas fa-check"></i> SUBMIT PAYMENT</button>
-    </div>
-  `;
-  overlay.classList.add('show');
-}
-
-function submitTierPayment(tier, ref, name, desc, content, pass, isPublic) {
-  const refInput = document.getElementById('paymentRef').value.trim();
-  const sender = document.getElementById('paymentSender').value.trim();
-  const phone = document.getElementById('paymentPhone').value.trim();
-  if (!refInput || !sender || !phone) { toast('Please fill all fields'); return; }
-  const plan = PLANS[tier];
-  APP.payments.push({
-    id: 'pay_' + Date.now(),
-    product: 'subscription',
-    tier: tier,
-    reference: refInput,
-    sender,
-    phone,
-    amount: plan.price,
-    status: 'pending',
-    secretData: { name, desc, content, pass, tier, isPublic: isPublic === 'true' },
-    createdAt: new Date().toISOString()
-  });
-  saveState();
-  document.getElementById('modalOverlay').classList.remove('show');
-  toast('📩 Payment submitted for verification');
 }
 
 // ============================================================
@@ -1736,6 +1842,8 @@ function showSecretView(sec) {
         ${sec.appliedBox ? `<div style="font-size:0.7rem; color:#7a6a72;">📦 Box: ${sec.appliedBox}</div>` : ''}
         ${sec.appliedTheme ? `<div style="font-size:0.7rem; color:#7a6a72;">🎨 Theme: ${sec.appliedTheme}</div>` : ''}
         ${sec.appliedEffect ? `<div style="font-size:0.7rem; color:#7a6a72;">✨ Effect: ${sec.appliedEffect}</div>` : ''}
+        ${sec.glowColor ? `<div style="font-size:0.7rem; color:#7a6a72;">🎨 Glow: <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:${sec.glowColor}; vertical-align:middle;"></span></div>` : ''}
+        ${sec.particleEffect && sec.particleEffect !== 'none' ? `<div style="font-size:0.7rem; color:#7a6a72;">✨ Particles: ${sec.particleEffect}</div>` : ''}
         <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;">
           <button class="btn btn-sm btn-outline" onclick="copySecret('${sec.content}')"><i class="fas fa-copy"></i> Copy</button>
           <button class="btn btn-sm btn-outline" onclick="toggleFavorite('${sec.id}');renderFavorites();"><i class="fas fa-star"></i> Favorite</button>
@@ -1903,6 +2011,8 @@ function updateUI() {
   updateAppliedItemsDisplay();
   updateBoxPreview();
   updateThemePreview();
+  updateGlowColorUI();
+  updateParticleEffectUI();
 }
 
 function toggleTokenPanel() {
@@ -1946,6 +2056,8 @@ function navigateTo(page) {
     updateAppliedItemsDisplay();
     updateBoxPreview();
     updateThemePreview();
+    updateGlowColorUI();
+    updateParticleEffectUI();
   }
   
   document.getElementById('modalOverlay').classList.remove('show');
