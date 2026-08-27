@@ -1018,7 +1018,6 @@
       background: #261a22;
     }
 
-    /* Voice Recorder Styles */
     .voice-recorder {
       background: #f8f4f6;
       border-radius: 16px;
@@ -1076,6 +1075,16 @@
       flex: 1;
       height: 30px;
     }
+
+    /* Premium Frames */
+    .frame-gold { border: 4px solid #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.3); }
+    .frame-vip { border: 4px solid #9b59b6; box-shadow: 0 0 30px rgba(155,89,182,0.3); }
+    .frame-luxury { border: 4px solid #c9a84c; box-shadow: 0 0 30px rgba(201,168,76,0.3); }
+    .frame-ultimate { border: 4px solid #e0c8ff; box-shadow: 0 0 30px rgba(224,200,255,0.3); }
+    .frame-pink { border: 4px solid #ff4d94; box-shadow: 0 0 30px rgba(255,77,148,0.3); }
+    .frame-rose { border: 4px solid #ff6b8a; box-shadow: 0 0 30px rgba(255,107,138,0.3); }
+    .frame-cyber { border: 4px solid #00ccff; box-shadow: 0 0 30px rgba(0,204,255,0.3); }
+    .frame-cosmic { border: 4px solid #e0c8ff; box-shadow: 0 0 30px rgba(224,200,255,0.3); }
 
     @media (max-width: 500px) { #app { border-radius: 0; min-height: 100vh; } .bottom-nav { padding: 2px 0 10px; } }
   </style>
@@ -1154,7 +1163,6 @@
   <div id="page-create" class="page">
     <h2 style="font-size:1.2rem; color:#ff4d94;">✧ New Vault</h2>
     
-    <!-- Applied Items Display -->
     <div style="margin: 10px 0;">
       <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">Applied Items:</div>
       <div id="appliedItemsContainer" class="applied-items">
@@ -1162,7 +1170,6 @@
       </div>
     </div>
 
-    <!-- Glow Color Picker -->
     <div style="margin: 10px 0;">
       <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">Choose Glow Color:</div>
       <div class="glow-color-options" id="glowColorOptions">
@@ -1177,7 +1184,6 @@
       </div>
     </div>
 
-    <!-- Particle Effect Selector -->
     <div style="margin: 10px 0;">
       <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">Choose Particle Effect:</div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -1189,7 +1195,22 @@
       </div>
     </div>
 
-    <!-- 3D Box Preview -->
+    <!-- Choose Frame -->
+    <div style="margin: 10px 0;">
+      <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">🖼️ Choose Frame:</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-sm btn-outline selected-frame" data-frame="none" onclick="selectFrame('none', this)">None</button>
+        <button class="btn btn-sm btn-outline" data-frame="gold" onclick="selectFrame('gold', this)">⭐ Gold</button>
+        <button class="btn btn-sm btn-outline" data-frame="vip" onclick="selectFrame('vip', this)">👑 VIP</button>
+        <button class="btn btn-sm btn-outline" data-frame="luxury" onclick="selectFrame('luxury', this)">✨ Luxury</button>
+        <button class="btn btn-sm btn-outline" data-frame="ultimate" onclick="selectFrame('ultimate', this)">🌟 Ultimate</button>
+        <button class="btn btn-sm btn-outline" data-frame="pink" onclick="selectFrame('pink', this)">💗 Pink</button>
+        <button class="btn btn-sm btn-outline" data-frame="rose" onclick="selectFrame('rose', this)">🌹 Rose</button>
+        <button class="btn btn-sm btn-outline" data-frame="cyber" onclick="selectFrame('cyber', this)">💠 Cyber</button>
+        <button class="btn btn-sm btn-outline" data-frame="cosmic" onclick="selectFrame('cosmic', this)">🌌 Cosmic</button>
+      </div>
+    </div>
+
     <div id="boxPreviewContainer" class="preview-box-container" style="margin: 10px 0; padding: 16px; border-radius: 20px; background: #f8f4f6; text-align: center; border: 2px solid #e8e0e4; transition: all 0.3s; position: relative; overflow: hidden;">
       <div class="particles-container" id="particlesContainer"></div>
       <div id="boxPreviewContent" style="position: relative; z-index: 2;">
@@ -1198,7 +1219,6 @@
       </div>
     </div>
 
-    <!-- Voice Recorder (Free for all) -->
     <div style="margin: 10px 0;">
       <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">🎙️ Voice Note (Free for everyone):</div>
       <div class="voice-recorder">
@@ -1217,7 +1237,6 @@
       </div>
     </div>
 
-    <!-- Music Upload (Premium+) -->
     <div style="margin: 10px 0;">
       <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">🎵 Add Music (Premium & Above):</div>
       <div class="upload-area" id="musicUploadArea" onclick="document.getElementById('musicFileInput').click()">
@@ -1232,7 +1251,6 @@
       </div>
     </div>
 
-    <!-- Image Upload (Premium+) -->
     <div style="margin: 10px 0;">
       <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:4px;">🖼️ Add Image (Premium & Above):</div>
       <div class="upload-area" id="imageUploadArea" onclick="document.getElementById('imageFileInput').click()">
@@ -1251,7 +1269,6 @@
       <div style="margin-bottom:10px;"><input id="secName" placeholder="Vault name" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; color:#1a0e14;"></div>
       <div style="margin-bottom:10px;"><input id="secDesc" placeholder="Description" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; color:#1a0e14;"></div>
       
-      <!-- Theme Preview Area -->
       <div id="themePreviewContainer" class="theme-preview" style="margin-bottom:10px; padding:16px; border-radius:16px; border:2px solid #e8e0e4; transition: all 0.3s;">
         <div style="font-size:0.8rem; color:#7a6a72; margin-bottom:6px;">Message Preview with Theme:</div>
         <textarea id="secContent" placeholder="Secret message..." style="width:100%; padding:12px 16px; border-radius:16px; background:transparent; border:1px solid #e8e0e4; color:#1a0e14; min-height:80px; transition: all 0.3s;"></textarea>
@@ -1306,6 +1323,7 @@
     <div class="shop-filters">
       <button class="btn btn-sm active" data-shop-filter="all" onclick="filterShop('all')">All</button>
       <button class="btn btn-sm" data-shop-filter="box" onclick="filterShop('box')">Boxes</button>
+      <button class="btn btn-sm" data-shop-filter="frame" onclick="filterShop('frame')">Frames</button>
       <button class="btn btn-sm" data-shop-filter="theme" onclick="filterShop('theme')">Themes</button>
       <button class="btn btn-sm" data-shop-filter="effect" onclick="filterShop('effect')">Effects</button>
     </div>
@@ -1402,7 +1420,9 @@ const TOKEN_PACKAGES = [
   { id: 'ultimate', name: 'ULTIMATE', tokens: 50000, price: 79.99, bonus: 15000 }
 ];
 
+// SHOP ITEMS with Frames
 const SHOP_ITEMS = [
+  // Boxes
   { id: 'pink_diamond', name: 'Pink Diamond', icon: '💗', category: 'box', price: 250, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
   { id: 'golden_rose', name: 'Golden Rose', icon: '🌹', category: 'box', price: 300, rarity: 'rare', tier: null, glowClass: 'glow' },
   { id: 'crystal_heart', name: 'Crystal Heart', icon: '💎', category: 'box', price: 400, rarity: 'epic', tier: null, glowClass: 'glow-pink' },
@@ -1428,6 +1448,16 @@ const SHOP_ITEMS = [
   { id: 'mirror', name: 'Mirror', icon: '🪞', category: 'box', price: 450, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
   { id: 'melody', name: 'Melody', icon: '🎼', category: 'box', price: 500, rarity: 'epic', tier: 'premium', glowClass: 'glow' },
   { id: 'love_letter', name: 'Love Letter', icon: '💌', category: 'box', price: 400, rarity: 'rare', tier: null, glowClass: 'glow-pink' },
+  // Frames
+  { id: 'frame_gold', name: 'Gold Frame', icon: '⭐', category: 'frame', price: 200, rarity: 'rare', tier: 'premium', frameClass: 'frame-gold' },
+  { id: 'frame_vip', name: 'VIP Frame', icon: '👑', category: 'frame', price: 400, rarity: 'epic', tier: 'vip', frameClass: 'frame-vip' },
+  { id: 'frame_luxury', name: 'Luxury Frame', icon: '✨', category: 'frame', price: 600, rarity: 'legendary', tier: 'luxury', frameClass: 'frame-luxury' },
+  { id: 'frame_ultimate', name: 'Ultimate Frame', icon: '🌟', category: 'frame', price: 800, rarity: 'legendary', tier: 'ultimate', frameClass: 'frame-ultimate' },
+  { id: 'frame_pink', name: 'Pink Frame', icon: '💗', category: 'frame', price: 250, rarity: 'rare', tier: null, frameClass: 'frame-pink' },
+  { id: 'frame_rose', name: 'Rose Frame', icon: '🌹', category: 'frame', price: 300, rarity: 'rare', tier: null, frameClass: 'frame-rose' },
+  { id: 'frame_cyber', name: 'Cyber Frame', icon: '💠', category: 'frame', price: 450, rarity: 'epic', tier: 'vip', frameClass: 'frame-cyber' },
+  { id: 'frame_cosmic', name: 'Cosmic Frame', icon: '🌌', category: 'frame', price: 700, rarity: 'legendary', tier: 'luxury', frameClass: 'frame-cosmic' },
+  // Themes
   { id: 'dark_theme', name: 'Dark Shadow', icon: '🌑', category: 'theme', price: 200, rarity: 'common', tier: null, themeClass: 'dark' },
   { id: 'gold_theme', name: 'Gold Royal', icon: '👑', category: 'theme', price: 400, rarity: 'rare', tier: 'premium', themeClass: 'gold' },
   { id: 'rose_theme', name: 'Rose Bloom', icon: '🌹', category: 'theme', price: 350, rarity: 'rare', tier: null, themeClass: 'rose' },
@@ -1452,12 +1482,13 @@ let APP = {
   adminLoggedIn: false,
   pendingPurchases: [],
   currentUser: null,
-  appliedItems: { box: null, theme: null, effect: null },
+  appliedItems: { box: null, theme: null, effect: null, frame: null },
   glowColor: '#ffd700',
   particleEffect: 'none',
   musicFile: null,
   imageFile: null,
-  voiceFile: null
+  voiceFile: null,
+  selectedFrame: null
 };
 
 // ============================================================
@@ -1491,7 +1522,6 @@ async function startRecording() {
       const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
       const audioUrl = URL.createObjectURL(audioBlob);
       
-      // Save voice file
       APP.voiceFile = {
         name: 'voice_note.webm',
         size: audioBlob.size,
@@ -1501,7 +1531,6 @@ async function startRecording() {
       saveUserData();
       updateVoicePreview();
       
-      // Stop all tracks
       stream.getTracks().forEach(track => track.stop());
       
       toast('✅ Voice note recorded!');
@@ -1514,7 +1543,6 @@ async function startRecording() {
     document.getElementById('recordBtn').innerHTML = '<i class="fas fa-stop"></i>';
     document.getElementById('voiceStatus').textContent = '🔴 Recording...';
     
-    // Start timer
     recordingTimer = setInterval(() => {
       recordingSeconds++;
       const mins = Math.floor(recordingSeconds / 60);
@@ -1647,12 +1675,13 @@ function handleAuth() {
       transactions: [],
       payments: [],
       dailyReward: { lastClaim: null, streak: 0 },
-      appliedItems: { box: null, theme: null, effect: null },
+      appliedItems: { box: null, theme: null, effect: null, frame: null },
       glowColor: '#ffd700',
       particleEffect: 'none',
       musicFile: null,
       imageFile: null,
-      voiceFile: null
+      voiceFile: null,
+      selectedFrame: null
     };
     localStorage.setItem('secretora_user_data_' + username, JSON.stringify(userData));
     
@@ -1679,12 +1708,13 @@ function loadUserData(username) {
   APP.transactions = data.transactions || [];
   APP.payments = data.payments || [];
   APP.dailyReward = data.dailyReward || { lastClaim: null, streak: 0 };
-  APP.appliedItems = data.appliedItems || { box: null, theme: null, effect: null };
+  APP.appliedItems = data.appliedItems || { box: null, theme: null, effect: null, frame: null };
   APP.glowColor = data.glowColor || '#ffd700';
   APP.particleEffect = data.particleEffect || 'none';
   APP.musicFile = data.musicFile || null;
   APP.imageFile = data.imageFile || null;
   APP.voiceFile = data.voiceFile || null;
+  APP.selectedFrame = data.selectedFrame || null;
   
   document.getElementById('userNameDisplay').textContent = user.displayName || username;
   updateAppliedItemsDisplay();
@@ -1694,6 +1724,7 @@ function loadUserData(username) {
   updateParticleEffectUI();
   updateFilePreviews();
   updateVoicePreview();
+  updateFrameUI();
 }
 
 function saveUserData() {
@@ -1713,7 +1744,8 @@ function saveUserData() {
     particleEffect: APP.particleEffect,
     musicFile: APP.musicFile,
     imageFile: APP.imageFile,
-    voiceFile: APP.voiceFile
+    voiceFile: APP.voiceFile,
+    selectedFrame: APP.selectedFrame
   };
   localStorage.setItem('secretora_user_data_' + APP.currentUser, JSON.stringify(data));
 }
@@ -1761,6 +1793,38 @@ function checkAuth() {
     }
   }
   return false;
+}
+
+// ============================================================
+// FRAME FUNCTIONS
+// ============================================================
+function selectFrame(frame, element) {
+  document.querySelectorAll('[data-frame]').forEach(el => {
+    el.classList.remove('selected-frame');
+    el.style.background = '';
+    el.style.color = '';
+  });
+  if (element) {
+    element.classList.add('selected-frame');
+    element.style.background = '#ff4d94';
+    element.style.color = 'white';
+  }
+  APP.selectedFrame = frame;
+  saveUserData();
+  updateBoxPreview();
+}
+
+function updateFrameUI() {
+  document.querySelectorAll('[data-frame]').forEach(el => {
+    el.classList.remove('selected-frame');
+    el.style.background = '';
+    el.style.color = '';
+    if (el.dataset.frame === APP.selectedFrame) {
+      el.classList.add('selected-frame');
+      el.style.background = '#ff4d94';
+      el.style.color = 'white';
+    }
+  });
 }
 
 // ============================================================
@@ -1938,6 +2002,10 @@ function updateAppliedItemsDisplay() {
     const box = SHOP_ITEMS.find(i => i.id === APP.appliedItems.box);
     if (box) items.push({ type: 'box', name: box.name, icon: box.icon, id: box.id });
   }
+  if (APP.appliedItems.frame) {
+    const frame = SHOP_ITEMS.find(i => i.id === APP.appliedItems.frame);
+    if (frame) items.push({ type: 'frame', name: frame.name, icon: frame.icon, id: frame.id });
+  }
   if (APP.appliedItems.theme) {
     const theme = SHOP_ITEMS.find(i => i.id === APP.appliedItems.theme);
     if (theme) items.push({ type: 'theme', name: theme.name, icon: theme.icon, id: theme.id });
@@ -1973,7 +2041,16 @@ function updateBoxPreview() {
   const container = document.getElementById('boxPreviewContainer');
   const content = document.getElementById('boxPreviewContent');
   
-  container.classList.remove('glow', 'glow-pink', 'glow-vip', 'glow-luxury', 'glow-ultimate');
+  container.classList.remove('glow', 'glow-pink', 'glow-vip', 'glow-luxury', 'glow-ultimate', 
+    'frame-gold', 'frame-vip', 'frame-luxury', 'frame-ultimate', 'frame-pink', 'frame-rose', 'frame-cyber', 'frame-cosmic');
+  
+  // Add frame if selected
+  if (APP.selectedFrame && APP.selectedFrame !== 'none') {
+    const frameItem = SHOP_ITEMS.find(i => i.id === 'frame_' + APP.selectedFrame);
+    if (frameItem && frameItem.frameClass) {
+      container.classList.add(frameItem.frameClass);
+    }
+  }
   
   const glowColor = APP.glowColor;
   
@@ -1986,13 +2063,13 @@ function updateBoxPreview() {
       content.innerHTML = `
         <div class="applied-box-icon">${box.icon}</div>
         <div class="applied-box-name">✨ ${box.name}</div>
-        <div style="font-size:0.6rem; color:#7a6a72; margin-top:4px;">Premium Box Applied</div>
+        <div style="font-size:0.6rem; color:#7a6a72; margin-top:4px;">${APP.selectedFrame && APP.selectedFrame !== 'none' ? '🖼️ ' + APP.selectedFrame.toUpperCase() + ' Frame' : 'No frame'}</div>
       `;
     }
   } else {
     content.innerHTML = `
       <div style="font-size: 2.5rem; margin-bottom: 4px;">🔐</div>
-      <div style="font-size: 0.7rem; color: #7a6a72;">No box applied</div>
+      <div style="font-size: 0.7rem; color: #7a6a72;">${APP.selectedFrame && APP.selectedFrame !== 'none' ? '🖼️ ' + APP.selectedFrame.toUpperCase() + ' Frame' : 'No box applied'}</div>
     `;
   }
   
@@ -2027,6 +2104,8 @@ function applyItemToCreation(itemId) {
   
   if (item.category === 'box') {
     APP.appliedItems.box = itemId;
+  } else if (item.category === 'frame') {
+    APP.appliedItems.frame = itemId;
   } else if (item.category === 'theme') {
     APP.appliedItems.theme = itemId;
   } else if (item.category === 'effect') {
@@ -2055,12 +2134,15 @@ function handleCreateSecret() {
   if (pass !== pass2) { toast('❌ Passwords do not match'); return; }
   if (pass.length < 4) { toast('❌ Password min 4 chars'); return; }
 
+  // Always make vault public
+  const publicStatus = true;
+
   if (tier !== 'standard' && APP.membership !== tier) {
-    showTierPurchaseModal(tier, { name, desc, content, pass, tier, isPublic });
+    showTierPurchaseModal(tier, { name, desc, content, pass, tier, isPublic: publicStatus });
     return;
   }
 
-  createSecretNow({ name, desc, content, pass, tier, isPublic });
+  createSecretNow({ name, desc, content, pass, tier, isPublic: publicStatus });
 }
 
 function createSecretNow(data) {
@@ -2069,12 +2151,17 @@ function createSecretNow(data) {
   const recipient = document.getElementById('secRecipient').value || 'Someone';
   
   let appliedBox = null;
+  let appliedFrame = null;
   let appliedTheme = null;
   let appliedEffect = null;
   
   if (APP.appliedItems.box) {
     const box = SHOP_ITEMS.find(i => i.id === APP.appliedItems.box);
     if (box) appliedBox = box.name;
+  }
+  if (APP.appliedItems.frame) {
+    const frame = SHOP_ITEMS.find(i => i.id === APP.appliedItems.frame);
+    if (frame) appliedFrame = frame.name;
   }
   if (APP.appliedItems.theme) {
     const th = SHOP_ITEMS.find(i => i.id === APP.appliedItems.theme);
@@ -2098,15 +2185,17 @@ function createSecretNow(data) {
     recipient: recipient,
     createdAt: new Date().toISOString(),
     unlocks: 0,
-    isPublic: data.isPublic !== undefined ? data.isPublic : true,
+    isPublic: true, // Always public
     isDemo: false,
     creator: APP.settings.profileName || APP.currentUser,
     userId: APP.currentUser,
     appliedBox: appliedBox,
+    appliedFrame: appliedFrame,
     appliedTheme: appliedTheme,
     appliedEffect: appliedEffect,
     glowColor: APP.glowColor,
     particleEffect: APP.particleEffect,
+    selectedFrame: APP.selectedFrame,
     musicFile: APP.musicFile ? { ...APP.musicFile } : null,
     imageFile: APP.imageFile ? { ...APP.imageFile } : null,
     voiceFile: APP.voiceFile ? { ...APP.voiceFile } : null
@@ -2137,78 +2226,6 @@ function createSecretNow(data) {
   ['secName','secDesc','secContent','secPass','secPass2','secRecipient'].forEach(id => document.getElementById(id).value='');
 }
 
-function showTierPurchaseModal(tier, secretData) {
-  const plan = PLANS[tier];
-  if (!plan) return;
-  const overlay = document.getElementById('modalOverlay');
-  const content = document.getElementById('modalContent');
-  const ref = 'SEC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-  content.innerHTML = `
-    <div style="text-align:center;">
-      <h3 style="color:#ff4d94;">👑 ${plan.name} SECRET</h3>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <p style="color:#7a6a72;">This secret requires ${plan.name} access.</p>
-        <div style="font-size:1.2rem; font-weight:600; color:#ff4d94;">$${plan.price.toFixed(2)}</div>
-        <div style="font-size:0.8rem; color:#7a6a72;">🔒 Not yet unlocked</div>
-      </div>
-      <button class="btn btn-primary btn-block" onclick="startTierPayment('${tier}', '${ref}', '${secretData.name}', '${secretData.desc}', '${secretData.content}', '${secretData.pass}', '${secretData.isPublic}')">CONTINUE TO PAYMENT</button>
-      <button class="btn btn-sm btn-outline mt-2" onclick="document.getElementById('modalOverlay').classList.remove('show')">Cancel</button>
-    </div>
-  `;
-  overlay.classList.add('show');
-}
-
-function startTierPayment(tier, ref, name, desc, content, pass, isPublic) {
-  document.getElementById('modalOverlay').classList.remove('show');
-  const plan = PLANS[tier];
-  const overlay = document.getElementById('modalOverlay');
-  const modalContent = document.getElementById('modalContent');
-  modalContent.innerHTML = `
-    <div style="text-align:center;">
-      <h3 style="color:#ff4d94;">💳 Complete Payment</h3>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <div style="color:#7a6a72;">Send payment to:</div>
-        <div style="font-size:1.3rem; font-weight:600; color:#ffd700;">${PAYMENT_NUMBER}</div>
-        <button class="btn btn-sm btn-outline" onclick="copyText('${PAYMENT_NUMBER}')"><i class="fas fa-copy"></i> Copy</button>
-      </div>
-      <div style="background:#f8f4f6; border-radius:16px; padding:16px; margin:12px 0;">
-        <div>Amount: <strong>$${plan.price.toFixed(2)}</strong></div>
-        <div>Plan: <strong>${plan.name}</strong></div>
-        <div style="font-size:0.8rem; color:#7a6a72;">Reference: <span style="color:#ffd700; font-weight:600;">${ref}</span></div>
-        <button class="btn btn-sm btn-outline" onclick="copyText('${ref}')"><i class="fas fa-copy"></i> Copy Reference</button>
-      </div>
-      <input id="paymentRef" placeholder="Payment reference" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin:6px 0;">
-      <input id="paymentSender" placeholder="Your name" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin:6px 0;">
-      <input id="paymentPhone" placeholder="Phone used" style="width:100%; padding:12px 16px; border-radius:16px; background:#f5f0f2; border:1px solid #e8e0e4; margin:6px 0;">
-      <button class="btn btn-primary btn-block mt-2" onclick="submitTierPayment('${tier}', '${ref}', '${name}', '${desc}', '${content}', '${pass}', '${isPublic}')"><i class="fas fa-check"></i> SUBMIT PAYMENT</button>
-    </div>
-  `;
-  overlay.classList.add('show');
-}
-
-function submitTierPayment(tier, ref, name, desc, content, pass, isPublic) {
-  const refInput = document.getElementById('paymentRef').value.trim();
-  const sender = document.getElementById('paymentSender').value.trim();
-  const phone = document.getElementById('paymentPhone').value.trim();
-  if (!refInput || !sender || !phone) { toast('Please fill all fields'); return; }
-  const plan = PLANS[tier];
-  APP.payments.push({
-    id: 'pay_' + Date.now(),
-    product: 'subscription',
-    tier: tier,
-    reference: refInput,
-    sender,
-    phone,
-    amount: plan.price,
-    status: 'pending',
-    secretData: { name, desc, content, pass, tier, isPublic: isPublic === 'true' },
-    createdAt: new Date().toISOString()
-  });
-  saveState();
-  document.getElementById('modalOverlay').classList.remove('show');
-  toast('📩 Payment submitted for verification');
-}
-
 // ============================================================
 // RENDER FUNCTIONS
 // ============================================================
@@ -2228,6 +2245,7 @@ function renderVault(filter = '') {
     
     let appliedInfo = '';
     if (s.appliedBox) appliedInfo += ' 📦' + s.appliedBox;
+    if (s.appliedFrame) appliedInfo += ' 🖼️' + s.appliedFrame;
     if (s.appliedTheme) appliedInfo += ' 🎨' + s.appliedTheme;
     if (s.appliedEffect) appliedInfo += ' ✨' + s.appliedEffect;
     if (s.musicFile) appliedInfo += ' 🎵';
@@ -2255,22 +2273,23 @@ function renderDiscovery() {
   const container = document.getElementById('discoveryGrid');
   const countEl = document.getElementById('vaultCountDiscovery');
   
-  const publicVaults = APP.secrets.filter(sec => sec.isPublic && !sec.isDemo);
+  // Get ALL vaults (all are public)
+  const allVaults = APP.secrets.filter(sec => !sec.isDemo);
   
-  if (!publicVaults.length) {
+  if (!allVaults.length) {
     container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#9a8a92; padding:30px 0;">
       <i class="fas fa-users" style="font-size:2rem; display:block; margin-bottom:8px;"></i>
-      <p>No public vaults yet.<br>Be the first to share!</p>
+      <p>No vaults yet.<br>Be the first to create a vault!</p>
       <button class="btn btn-primary btn-sm mt-2" onclick="navigateTo('create')">Create Vault</button>
     </div>`;
     countEl.textContent = '0 vaults';
     return;
   }
   
-  countEl.textContent = publicVaults.length + ' vaults';
+  countEl.textContent = allVaults.length + ' vaults';
   
   let html = '';
-  publicVaults.forEach(vault => {
+  allVaults.forEach(vault => {
     const isLocked = true;
     const tier = vault.tier || 'standard';
     const tierDisplay = tier === 'standard' ? 'Standard' : tier.toUpperCase();
@@ -2295,13 +2314,23 @@ function renderDiscovery() {
       buttonHtml = `<button class="btn btn-sm" style="background:#f0e8ec;" onclick="showUpgradePrompt('${tier}')">🔒 ${tierDisplay} Required</button>`;
     }
     
+    // Frame preview in discovery
+    let frameClass = '';
+    if (vault.selectedFrame && vault.selectedFrame !== 'none') {
+      const frameItem = SHOP_ITEMS.find(i => i.id === 'frame_' + vault.selectedFrame);
+      if (frameItem && frameItem.frameClass) {
+        frameClass = frameItem.frameClass;
+      }
+    }
+    
     html += `
-      <div class="vault-discovery-card ${tierClass}">
+      <div class="vault-discovery-card ${tierClass} ${frameClass}">
         ${tierLabel ? `<span class="tier-badge ${tierBadge}">${tierLabel}</span>` : ''}
         <div class="vault-icon">${vault.category ? vault.category.charAt(0) : '🔐'}</div>
         <div class="vault-name">${vault.name}</div>
         <div class="vault-desc">${vault.description || 'No description'}</div>
         ${vault.creator ? `<div style="font-size:0.6rem; color:#9a8a92; text-align:center;">by ${vault.creator}</div>` : ''}
+        ${vault.appliedFrame ? `<div style="font-size:0.55rem; color:#ffd700; text-align:center;">🖼️ ${vault.appliedFrame}</div>` : ''}
         <div class="vault-meta">
           <span class="vault-status ${isLocked ? 'locked' : 'unlocked'}">
             ${isLocked ? '🔒 Locked' : '🔓 Unlocked'}
@@ -2394,8 +2423,16 @@ function showSecretView(sec) {
       </div>`;
     }
     
+    let frameClass = '';
+    if (sec.selectedFrame && sec.selectedFrame !== 'none') {
+      const frameItem = SHOP_ITEMS.find(i => i.id === 'frame_' + sec.selectedFrame);
+      if (frameItem && frameItem.frameClass) {
+        frameClass = frameItem.frameClass;
+      }
+    }
+    
     content.innerHTML = `
-      <div style="background:#ffffff; border-radius:32px; padding:24px; border:2px solid #ff4d94;">
+      <div style="background:#ffffff; border-radius:32px; padding:24px; border:2px solid #ff4d94; ${frameClass}">
         <div class="flex-between"><span style="font-size:1.3rem; font-weight:600;">${sec.name}</span><span class="badge" style="background:#ff4d94; color:white;">${sec.tier.toUpperCase()}</span></div>
         <div style="color:#7a6a72; margin:8px 0;">${sec.description || ''}</div>
         <div style="background:#f8f4f6; border-radius:16px; padding:20px; margin:12px 0; border-left:4px solid #ff4d94; white-space:pre-wrap;">${sec.content}</div>
@@ -2404,6 +2441,7 @@ function showSecretView(sec) {
         ${voiceHtml}
         <div style="display:flex; flex-wrap:wrap; gap:6px; font-size:0.7rem; color:#7a6a72;">📅 ${new Date(sec.createdAt).toLocaleDateString()} 👤 ${sec.recipient||'Anonymous'}</div>
         ${sec.appliedBox ? `<div style="font-size:0.7rem; color:#7a6a72;">📦 Box: ${sec.appliedBox}</div>` : ''}
+        ${sec.appliedFrame ? `<div style="font-size:0.7rem; color:#7a6a72;">🖼️ Frame: ${sec.appliedFrame}</div>` : ''}
         ${sec.appliedTheme ? `<div style="font-size:0.7rem; color:#7a6a72;">🎨 Theme: ${sec.appliedTheme}</div>` : ''}
         ${sec.appliedEffect ? `<div style="font-size:0.7rem; color:#7a6a72;">✨ Effect: ${sec.appliedEffect}</div>` : ''}
         ${sec.glowColor ? `<div style="font-size:0.7rem; color:#7a6a72;">🎨 Glow: <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:${sec.glowColor}; vertical-align:middle;"></span></div>` : ''}
@@ -2507,6 +2545,7 @@ function renderShop(filter = 'all') {
     const rarityClass = 'rarity-' + (item.rarity || 'common');
     const tierLabel = item.tier ? `<span class="tier-required">${item.tier.toUpperCase()}</span>` : '';
     const isApplied = (item.category === 'box' && APP.appliedItems.box === item.id) ||
+                      (item.category === 'frame' && APP.appliedItems.frame === item.id) ||
                       (item.category === 'theme' && APP.appliedItems.theme === item.id) ||
                       (item.category === 'effect' && APP.appliedItems.effect === item.id);
     
@@ -2551,7 +2590,7 @@ function buyShopItem(itemId) {
   renderShop(APP.shopFilter);
   toast('✅ ' + item.name + ' purchased!');
   
-  if (item.category === 'box' || item.category === 'theme' || item.category === 'effect') {
+  if (item.category === 'box' || item.category === 'frame' || item.category === 'theme' || item.category === 'effect') {
     applyItemToCreation(itemId);
   }
 }
@@ -2579,6 +2618,7 @@ function updateUI() {
   updateParticleEffectUI();
   updateFilePreviews();
   updateVoicePreview();
+  updateFrameUI();
 }
 
 function toggleTokenPanel() {
@@ -2626,6 +2666,7 @@ function navigateTo(page) {
     updateParticleEffectUI();
     updateFilePreviews();
     updateVoicePreview();
+    updateFrameUI();
   }
   
   document.getElementById('modalOverlay').classList.remove('show');
@@ -2777,7 +2818,7 @@ function approvePayment(paymentId) {
       recipient,
       createdAt: new Date().toISOString(),
       unlocks: 0,
-      isPublic: data.isPublic !== undefined ? data.isPublic : true,
+      isPublic: true,
       isDemo: false,
       creator: APP.settings.profileName || APP.currentUser,
       userId: APP.currentUser
